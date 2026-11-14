@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Saturn V — Parts Atlas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2efe7;
+      --muted: #a7aaa0;
+      --gold: #d7ad66;
+      --line: #383b33;
+      --panel: #191b17;
+      --bg: #10120f;
+      --serif: Georgia, "Times New Roman", serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: var(--bg); }
+    a { color: inherit; }
+    button { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+
+    .topbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .17em;
+      text-decoration: none;
+    }
+    .brand span { color: var(--gold); }
+    .top-link, .back-link {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+      transition: color .18s ease;
+    }
+    .top-link:hover, .back-link:hover { color: var(--gold); }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      align-items: end;
+      gap: 28px;
+      padding: 82px 0 66px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      right: 4%;
+      bottom: 4px;
+      width: 180px;
+      height: 330px;
+      content: "";
+      opacity: .14;
+      background:
+        linear-gradient(90deg, transparent 39%, #d7ad66 40% 60%, transparent 61%) 50% 0 / 100% 5% no-repeat,
+        linear-gradient(90deg, transparent 25%, #f2efe7 26% 74%, transparent 75%) 50% 8% / 100% 75% no-repeat,
+        linear-gradient(90deg, transparent 15%, #d7ad66 16% 84%, transparent 85%) 50% 83% / 100% 13% no-repeat,
+        linear-gradient(90deg, transparent 24%, #f2efe7 25% 75%, transparent 76%) 50% 96% / 100% 4% no-repeat;
+      clip-path: polygon(50% 0, 64% 9%, 77% 12%, 77% 80%, 100% 100%, 0 100%, 23% 80%, 23% 12%, 36% 9%);
+      pointer-events: none;
+    }
+    .eyebrow, .section-kicker {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-family: var(--serif);
+      font-size: clamp(44px, 8vw, 88px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .96;
+    }
+    h1 em { color: var(--gold); font-weight: 400; }
+    .hero-copy {
+      max-width: 560px;
+      margin-bottom: 0;
+      color: #b7b9b1;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .hero-aside {
+      padding: 0 0 4px 18px;
+      border-left: 1px solid var(--gold);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    .hero-aside strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .catalog { padding: 62px 0 80px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .section-heading h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .section-heading p {
+      max-width: 345px;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .stage-section { padding-top: 30px; }
+    .stage-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0 0 15px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .stage-title span { color: #797d73; font-weight: 500; letter-spacing: .04em; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .part-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr);
+      align-items: center;
+      gap: 20px;
+      min-height: 174px;
+      padding: 19px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1c1e19, #151713);
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+    .part-card:hover {
+      transform: translateY(-2px);
+      border-color: #9c7d4d;
+      background: linear-gradient(135deg, #24251e, #191b17);
+    }
+    .card-index {
+      position: absolute;
+      top: 13px;
+      right: 15px;
+      color: #62665c;
+      font-size: 10px;
+      letter-spacing: .12em;
+    }
+    .art {
+      position: relative;
+      display: grid;
+      width: 82px;
+      height: 118px;
+      place-items: center;
+      overflow: hidden;
+      border-right: 1px solid #34362f;
+      background: radial-gradient(ellipse at 50% 65%, #d7ad6618, transparent 70%);
+    }
+    .tank-shape {
+      position: relative;
+      width: 32px;
+      height: 90px;
+      border: 1px solid #b9b9ae;
+      border-radius: 7px 7px 2px 2px;
+      background: repeating-linear-gradient(to bottom, #e5e1d7 0 19px, #242620 20px 24px);
+      box-shadow: inset 6px 0 8px #fff2, 4px 5px 16px #0008;
+    }
+    .tank-shape::before {
+      position: absolute;
+      top: -9px;
+      left: 7px;
+      width: 16px;
+      height: 10px;
+      border: 1px solid #aaa99d;
+      border-bottom: 0;
+      border-radius: 10px 10px 0 0;
+      content: "";
+      background: #d7d4ca;
+    }
+    .tank-shape::after {
+      position: absolute;
+      bottom: -7px;
+      left: 1px;
+      width: 28px;
+      height: 7px;
+      content: "";
+      background: repeating-linear-gradient(90deg, #85877f 0 5px, transparent 5px 7px);
+    }
+    .tank-shape.short { height: 63px; width: 35px; border-color: #d7d4ca; }
+    .tank-shape.short::before { display: none; }
+    .engine-shape {
+      position: relative;
+      width: 32px;
+      height: 59px;
+      border: 2px solid #9c9b8e;
+      border-top: 8px solid #c0bba9;
+      border-radius: 6px 6px 13px 13px;
+      background: linear-gradient(90deg, #45483f, #a4a295 44%, #373930);
+      clip-path: polygon(13% 0, 87% 0, 100% 70%, 83% 100%, 17% 100%, 0 70%);
+      filter: drop-shadow(4px 5px 7px #0008);
+    }
+    .engine-shape::after {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      left: 5px;
+      height: 21px;
+      border: 1px solid #d7ad66;
+      border-radius: 0 0 10px 10px;
+      content: "";
+      opacity: .8;
+    }
+    .engine-shape.cluster::before {
+      position: absolute;
+      top: -5px;
+      left: 8px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      content: "";
+      background: #d7ad66;
+      box-shadow: 9px 0 #d7ad66, -4px 8px #d7ad66, 13px 8px #d7ad66;
+    }
+    .instrument-shape {
+      width: 68px;
+      height: 21px;
+      border: 2px solid #c6a665;
+      border-radius: 50%;
+      background: linear-gradient(#48483c, #22251f);
+      box-shadow: 0 7px 0 -3px #8e774d, inset 0 0 9px #d7ad6633;
+    }
+    .capsule-shape {
+      position: relative;
+      width: 38px;
+      height: 87px;
+      border: 1px solid #b4b1a3;
+      border-radius: 48% 48% 12% 12%;
+      background: linear-gradient(90deg, #6e7068, #e3dfd1 42%, #8d8d80);
+      clip-path: polygon(50% 0, 100% 26%, 92% 91%, 75% 100%, 25% 100%, 8% 91%, 0 26%);
+      filter: drop-shadow(4px 5px 7px #0008);
+    }
+    .capsule-shape::after {
+      position: absolute;
+      right: 0;
+      bottom: 11px;
+      left: 0;
+      height: 24px;
+      border-top: 1px solid #d7ad66;
+      border-bottom: 1px solid #d7ad66;
+      content: "";
+      background: #d7ad6628;
+    }
+    .part-copy { min-width: 0; }
+    .part-copy .kind {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .part-copy h3 {
+      margin: 0 0 7px;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    .part-copy p {
+      max-width: 350px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .open-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .open-model::after { content: "↗"; color: var(--gold); font-size: 14px; }
+    footer {
+      padding: 20px 0 28px;
+      border-top: 1px solid var(--line);
+      color: #82867c;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    #viewer-page { min-height: 100vh; display: none; }
+    .viewer-top { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); }
+    .viewer-intro { padding: 40px 0 25px; }
+    .viewer-intro .eyebrow { margin-bottom: 9px; }
+    .viewer-intro h1 { margin-bottom: 10px; font-size: clamp(36px, 6vw, 60px); }
+    .viewer-intro p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .viewer-shell { position: relative; height: min(68vh, 650px); min-height: 390px; border: 1px solid var(--line); background: radial-gradient(ellipse at 50% 42%, #242821, #10120f 70%); }
+    #model-canvas { display: block; width: 100%; height: 100%; }
+    .viewer-status {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 8px 11px;
+      border: 1px solid #42443c;
+      background: #10120fdd;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .08em;
+    }
+    .viewer-controls { display: flex; flex-wrap: wrap; gap: 9px; padding: 14px 0 48px; }
+    .viewer-controls button {
+      padding: 10px 14px;
+      border: 1px solid #55564b;
+      border-radius: 2px;
+      background: #1b1d18;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 11px;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .viewer-controls button:hover { border-color: var(--gold); background: #292a21; }
+    .viewer-controls button.primary { border-color: #987945; color: #e9c786; }
+
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 32px, 540px); }
+      .hero { grid-template-columns: 1fr; padding: 60px 0 44px; }
+      .hero-aside { max-width: 270px; }
+      .hero::after { right: -40px; opacity: .09; }
+      .section-heading { align-items: start; flex-direction: column; gap: 10px; }
+      .cards { grid-template-columns: 1fr; }
+      .part-card { min-height: 160px; }
+      .viewer-shell { min-height: 340px; height: 58vh; }
+    }
+    @media (max-width: 410px) {
+      .part-card { grid-template-columns: 68px minmax(0, 1fr); gap: 13px; padding: 14px; }
+      .art { width: 62px; }
+      .part-copy h3 { font-size: 20px; }
+      .viewer-shell { min-height: 300px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="catalog-page">
+    <header class="topbar wrap">
+      <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+      <a class="top-link" href="https://tianmin435.github.io/s1203roc/SaturnV.html">Open full Saturn V explorer ↗</a>
+    </header>
+
+    <main>
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">Apollo program · Launch vehicle 01</p>
+          <h1>A vehicle<br>built in <em>stages.</em></h1>
+          <p class="hero-copy">Explore the Saturn V from its five-engine first stage to the Apollo spacecraft. Choose a component to open its own interactive 3D view.</p>
+        </div>
+        <div class="hero-aside">
+          <strong>Saturn V / Apollo</strong>
+          Three launch stages<br>
+          Eight component views<br>
+          Rotate · zoom · inspect
+        </div>
+      </section>
+
+      <section class="catalog wrap" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Component index / 01—04</p>
+            <h2 id="catalog-title">Explore the vehicle</h2>
+          </div>
+          <p>Each model opens in a dedicated view. Drag to rotate and use the scroll wheel or pinch to zoom.</p>
+        </div>
+
+        <section class="stage-section" aria-labelledby="stage-one">
+          <h3 class="stage-title" id="stage-one">01 / First stage <span>S-IC · RP-1 / liquid oxygen</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=first-tank">
+              <span class="card-index">01.1</span>
+              <span class="art" aria-hidden="true"><span class="tank-shape"></span></span>
+              <span class="part-copy"><span class="kind">S-IC · Tank assembly</span><h3>First-stage tank</h3><p>The booster’s large propellant stage, surrounding its engine cluster and aft structure.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=first-engine">
+              <span class="card-index">01.2</span>
+              <span class="art" aria-hidden="true"><span class="engine-shape"></span></span>
+              <span class="part-copy"><span class="kind">Rocketdyne · single engine</span><h3>F-1 engine</h3><p>One complete F-1 engine assembly from the Saturn V model.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="stage-two">
+          <h3 class="stage-title" id="stage-two">02 / Second stage <span>S-II · liquid hydrogen / liquid oxygen</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=second-tank">
+              <span class="card-index">02.1</span>
+              <span class="art" aria-hidden="true"><span class="tank-shape"></span></span>
+              <span class="part-copy"><span class="kind">S-II · Tank assembly</span><h3>Second-stage tank</h3><p>The upper booster stage with its cylindrical propellant tanks and engine section.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=second-engine">
+              <span class="card-index">02.2</span>
+              <span class="art" aria-hidden="true"><span class="engine-shape"></span></span>
+              <span class="part-copy"><span class="kind">Rocketdyne · single detailed engine</span><h3>J-2 engine</h3><p>Inspect one fully assembled J-2 engine; the second stage used five.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="stage-three">
+          <h3 class="stage-title" id="stage-three">03 / Third stage <span>S-IVB · translunar injection</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=third-tank">
+              <span class="card-index">03.1</span>
+              <span class="art" aria-hidden="true"><span class="tank-shape short"></span></span>
+              <span class="part-copy"><span class="kind">S-IVB · Full stage assembly</span><h3>Third stage</h3><p>The complete upper-stage model from the original Saturn V explorer.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=instrument-unit">
+              <span class="card-index">03.2</span>
+              <span class="art" aria-hidden="true"><span class="instrument-shape"></span></span>
+              <span class="part-copy"><span class="kind">Guidance · Navigation · Control</span><h3>Instrument Unit</h3><p>The ring-shaped guidance and control section above the third stage.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=third-engine">
+              <span class="card-index">03.3</span>
+              <span class="art" aria-hidden="true"><span class="engine-shape"></span></span>
+              <span class="part-copy"><span class="kind">Rocketdyne · 1 engine</span><h3>J-2 engine</h3><p>The single restartable engine used for orbital insertion and translunar injection.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="apollo">
+          <h3 class="stage-title" id="apollo">04 / Apollo spacecraft <span>Command and Service Module</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=apollo">
+              <span class="card-index">04.1</span>
+              <span class="art" aria-hidden="true"><span class="capsule-shape"></span></span>
+              <span class="part-copy"><span class="kind">Command Module · Service Module</span><h3>Apollo spacecraft</h3><p>The crew capsule and service module that carried astronauts to lunar orbit and home.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer><div class="wrap">Stage and spacecraft views use the Saturn V GLB in the <a href="https://tianmin435.github.io/s1203roc/SaturnV.html">original high-fidelity explorer</a>. The detailed J-2 model is loaded from the supplied engine file. The Instrument Unit is an educational representation because it is not a separate mesh in the Saturn V GLB.</div></footer>
+  </div>
+
+  <main id="viewer-page">
+    <div class="wrap">
+      <header class="viewer-top">
+        <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+        <a class="back-link" href="./index.html">← Back to components</a>
+      </header>
+      <section class="viewer-intro">
+        <p class="eyebrow" id="viewer-kicker">Saturn V / Component view</p>
+        <h1 id="viewer-title">Loading component…</h1>
+        <p id="viewer-description">Loading the supplied Saturn V 3D model.</p>
+      </section>
+      <div class="viewer-shell">
+        <canvas id="model-canvas" aria-label="Interactive Saturn V component 3D model"></canvas>
+        <div class="viewer-status" id="viewer-status" role="status">Loading 3D model…</div>
+      </div>
+      <div class="viewer-controls">
+        <button class="primary" id="isolate-button" type="button">Isolate component</button>
+        <button id="whole-button" type="button">View complete rocket</button>
+        <button id="reset-button" type="button">Reset camera</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const saturnModelUrl = 'https://tianmin435.github.io/s1203roc/assets/saturn-v/source/SaturnV.glb';
+    const components = {
+      'first-tank': {
+        title: 'First-stage tank', kicker: 'S-IC / Propellant stage',
+        description: 'The S-IC first stage, with its five F-1 engines hidden to reveal the stage structure.',
+        node: 'Saturn_V_First_Stage_91', exclude: ['F-1_Engine_-_First_Stage']
+      },
+      'first-engine': {
+        title: 'F-1 engine', kicker: 'S-IC / Single engine',
+        description: 'One complete F-1 engine assembly, isolated from the Saturn V first-stage model.',
+        node: 'F-1_Engine_-_First_Stage_63'
+      },
+      'second-tank': {
+        title: 'Second-stage tank', kicker: 'S-II / Propellant stage',
+        description: 'The S-II second stage, isolated from its five J-2 engines.',
+        node: 'Saturn_V_Second_Stage_113', exclude: ['J-2_Engine_-_Second_Stage']
+      },
+      'second-engine': {
+        title: 'J-2 engine', kicker: 'S-II / One of five engines',
+        description: 'The supplied fully assembled detailed J-2 engine model. The S-II stage used five engines of this type.',
+        modelUrl: 'assets/engine_j2.glb', standalone: true
+      },
+      'third-tank': {
+        title: 'Third stage · S-IVB', kicker: 'Saturn V / Third stage',
+        description: 'The complete S-IVB third-stage assembly, isolated from the full Saturn V just as in the original explorer.',
+        node: 'Saturn_V_Third_Stage_131'
+      },
+      'instrument-unit': {
+        title: 'Instrument Unit', kicker: 'S-IVB / Guidance and control',
+        description: 'An educational ring model of the Instrument Unit. The supplied GLB does not contain it as a separate mesh.',
+        procedural: 'instrument'
+      },
+      'third-engine': {
+        title: 'J-2 engine', kicker: 'S-IVB / Single engine',
+        description: 'The supplied fully assembled detailed J-2 engine model used by the S-IVB third stage.',
+        modelUrl: 'assets/engine_j2.glb', standalone: true
+      },
+      apollo: {
+        title: 'Apollo spacecraft', kicker: 'Apollo / Command and Service Module',
+        description: 'The Apollo Command Module, Service Module, and Launch Escape System from the supplied model.',
+        nodes: ['Apollo_Capsule_and_SM_14', 'Launch_Escape_System_53']
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const selectedKey = params.get('component');
+    const component = components[selectedKey];
+    if (component) {
+      document.querySelector('#catalog-page').hidden = true;
+      document.querySelector('#viewer-page').style.display = 'block';
+      document.title = `${component.title} | Saturn V Parts Atlas`;
+      document.querySelector('#viewer-title').textContent = component.title;
+      document.querySelector('#viewer-kicker').textContent = component.kicker;
+      document.querySelector('#viewer-description').textContent = component.description;
+      startViewer(component);
+    }
+
+    function startViewer(selected) {
+      const canvas = document.querySelector('#model-canvas');
+      const status = document.querySelector('#viewer-status');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x12140f);
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 5000);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minDistance = 1;
+      controls.maxDistance = 3000;
+      scene.add(new THREE.HemisphereLight(0xdce7f0, 0x383125, 2.2));
+      const keyLight = new THREE.DirectionalLight(0xffe6bd, 3.2);
+      keyLight.position.set(6, 12, 9);
+      scene.add(keyLight);
+      const fillLight = new THREE.DirectionalLight(0x8db7e2, 1.6);
+      fillLight.position.set(-8, 4, -7);
+      scene.add(fillLight);
+      const floor = new THREE.GridHelper(200, 40, 0x514735, 0x292d25);
+      floor.position.y = -0.02;
+      scene.add(floor);
+
+      let modelRoot = null;
+      let instrument = null;
+      let componentBounds = null;
+      if (selected.standalone) {
+        document.querySelector('#isolate-button').hidden = true;
+        document.querySelector('#whole-button').hidden = true;
+      }
+
+      function resize() {
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        camera.aspect = bounds.width / bounds.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(bounds.width, bounds.height, false);
+      }
+
+      function setVisible(root, visible) {
+        root.traverse(node => { node.visible = visible; });
+      }
+
+      function revealNode(node) {
+        let current = node;
+        while (current) {
+          current.visible = true;
+          current = current.parent;
+        }
+        node.traverse(child => { child.visible = true; });
+      }
+
+      function getVisibleBounds(root) {
+        const bounds = new THREE.Box3();
+        root.updateMatrixWorld(true);
+        root.traverse(node => {
+          if (!node.visible || !node.isMesh || !node.geometry) return;
+          if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+          if (node.geometry.boundingBox) {
+            bounds.union(node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld));
+          }
+        });
+        return bounds;
+      }
+
+      function showSelection() {
+        if (!modelRoot) return;
+        if (selected.standalone) {
+          setVisible(modelRoot, true);
+          componentBounds = getVisibleBounds(modelRoot);
+          if (componentBounds.isEmpty()) {
+            status.textContent = 'The supplied engine model has no visible geometry.';
+            return;
+          }
+          focusOnBounds(componentBounds);
+          status.textContent = 'Complete J-2 engine · drag to rotate';
+          return;
+        }
+        setVisible(modelRoot, false);
+        if (instrument) instrument.visible = false;
+        if (selected.procedural === 'instrument') {
+          instrument.visible = true;
+          componentBounds = getVisibleBounds(instrument);
+        } else {
+          const names = selected.nodes || (selected.node ? [selected.node] : []);
+          if (selected.match) {
+            modelRoot.traverse(node => {
+              if (node.name.includes(selected.match)) revealNode(node);
+            });
+          } else {
+            names.forEach(name => {
+              const node = modelRoot.getObjectByName(name);
+              if (node) revealNode(node);
+            });
+          }
+          (selected.exclude || []).forEach(fragment => {
+            modelRoot.traverse(node => {
+              if (node.name.includes(fragment)) setVisible(node, false);
+            });
+          });
+          componentBounds = getVisibleBounds(modelRoot);
+        }
+        if (componentBounds.isEmpty()) {
+          status.textContent = 'Could not isolate visible geometry for this component.';
+          return;
+        }
+        focusOnBounds(componentBounds);
+        status.textContent = 'Component isolated · drag to rotate';
+      }
+
+      function focusOnBounds(bounds) {
+        if (bounds.isEmpty()) {
+          status.textContent = 'This component has no visible geometry.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const distance = Math.max(maxSize * 1.8, 2);
+        camera.position.set(center.x + distance * 0.9, center.y + distance * 0.55, center.z + distance * 1.15);
+        camera.near = Math.max(distance / 1000, 0.01);
+        camera.far = Math.max(distance * 30, 100);
+        camera.updateProjectionMatrix();
+        controls.target.copy(center);
+        controls.minDistance = Math.max(maxSize * 0.2, 0.5);
+        controls.maxDistance = Math.max(maxSize * 8, 20);
+        controls.update();
+      }
+
+      function showWholeRocket() {
+        if (!modelRoot || selected.standalone) return;
+        setVisible(modelRoot, true);
+        if (instrument) instrument.visible = false;
+        focusOnBounds(getVisibleBounds(modelRoot));
+        status.textContent = 'Complete Saturn V · drag to rotate';
+      }
+
+      function makeInstrumentUnit() {
+        const group = new THREE.Group();
+        const metal = new THREE.MeshStandardMaterial({ color: 0xaeb4b6, metalness: 0.72, roughness: 0.34 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xb88b42, metalness: 0.62, roughness: 0.38 });
+        const ring = new THREE.Mesh(new THREE.CylinderGeometry(2.75, 2.75, 0.42, 64, 1, true), metal);
+        group.add(ring);
+        for (let y of [-0.22, 0.22]) {
+          const band = new THREE.Mesh(new THREE.TorusGeometry(2.75, 0.07, 10, 64), gold);
+          band.rotation.x = Math.PI / 2;
+          band.position.y = y;
+          group.add(band);
+        }
+        for (let i = 0; i < 16; i++) {
+          const angle = i * Math.PI / 8;
+          const unit = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.23, 0.28), gold);
+          unit.position.set(Math.cos(angle) * 2.63, 0, Math.sin(angle) * 2.63);
+          unit.rotation.y = -angle;
+          group.add(unit);
+        }
+        return group;
+      }
+
+      new GLTFLoader().load(selected.modelUrl || saturnModelUrl, gltf => {
+        modelRoot = gltf.scene;
+        scene.add(modelRoot);
+        if (selected.procedural === 'instrument') {
+          instrument = makeInstrumentUnit();
+          instrument.visible = false;
+          scene.add(instrument);
+        }
+        scene.updateMatrixWorld(true);
+
+        if (!selected.standalone && selected.procedural !== 'instrument') {
+          const wantedNames = selected.nodes || (selected.node ? [selected.node] : []);
+          const missing = wantedNames.filter(name => !modelRoot.getObjectByName(name));
+          if (missing.length) {
+            console.error('Saturn V GLB is missing required component nodes:', missing);
+            status.textContent = 'Could not find this component in the supplied model.';
+            return;
+          }
+          if (selected.match && !modelRoot.children.some(node => {
+            let found = false;
+            node.traverse(child => { if (child.name.includes(selected.match)) found = true; });
+            return found;
+          })) {
+            console.error('Saturn V GLB is missing engine nodes matching:', selected.match);
+            status.textContent = 'Could not find this component in the supplied model.';
+            return;
+          }
+        }
+
+        showSelection();
+      }, event => {
+        if (event.total) status.textContent = `Loading 3D model · ${Math.min(100, Math.round(event.loaded / event.total * 100))}%`;
+      }, error => {
+        console.error('Unable to load the Saturn V GLB:', error);
+        status.textContent = 'Unable to load the 3D model. Check your internet connection and try again.';
+      });
+
+      document.querySelector('#isolate-button').addEventListener('click', showSelection);
+      document.querySelector('#whole-button').addEventListener('click', showWholeRocket);
+      document.querySelector('#reset-button').addEventListener('click', () => {
+        if (componentBounds) focusOnBounds(componentBounds);
+      });
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+      function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+  </script>
+</body>
+</html>
