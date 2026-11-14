@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Falcon 9 — Component Atlas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #10120f;
+      color: #f2efe7;
+      --gold: #d7ad66;
+      --muted: #a7aaa0;
+      --line: #383b33;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    body { min-width: 320px; min-height: 100vh; margin: 0; }
+    a { color: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar, .viewer-top {
+      display: flex;
+      min-height: 68px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .17em;
+      text-decoration: none;
+    }
+    .brand span { color: var(--gold); }
+    .top-link, .back-link {
+      color: var(--muted);
+      font-size: 11px;
+      text-decoration: none;
+      transition: color .18s ease;
+    }
+    .top-link:hover, .back-link:hover { color: var(--gold); }
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      align-items: end;
+      gap: 28px;
+      padding: 72px 0 58px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      right: 7%;
+      bottom: 0;
+      width: 130px;
+      height: 300px;
+      content: "";
+      opacity: .14;
+      background:
+        linear-gradient(90deg, transparent 34%, #d7ad66 35% 65%, transparent 66%) 50% 0 / 100% 8% no-repeat,
+        linear-gradient(90deg, transparent 25%, #f2efe7 26% 74%, transparent 75%) 50% 8% / 100% 82% no-repeat,
+        linear-gradient(90deg, transparent 12%, #d7ad66 13% 87%, transparent 88%) 50% 90% / 100% 10% no-repeat;
+      clip-path: polygon(50% 0, 70% 8%, 70% 87%, 100% 100%, 0 100%, 30% 87%, 30% 8%);
+      pointer-events: none;
+    }
+    .eyebrow, .section-kicker {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 720px;
+      margin-bottom: 18px;
+      font-family: var(--serif);
+      font-size: clamp(44px, 8vw, 82px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .96;
+    }
+    h1 em { color: var(--gold); font-weight: 400; }
+    .hero-copy {
+      max-width: 580px;
+      margin: 0;
+      color: #b7b9b1;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .hero-aside {
+      padding-left: 17px;
+      border-left: 1px solid var(--gold);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .hero-aside strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #f2efe7;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .catalog { padding: 54px 0 72px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+    .section-heading h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 42px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .section-heading > p {
+      max-width: 350px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .stage-section { padding-top: 25px; }
+    .stage-title {
+      display: flex;
+      align-items: baseline;
+      gap: 11px;
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .stage-title span { color: #85897e; font-weight: 500; letter-spacing: .04em; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .part-card {
+      position: relative;
+      display: grid;
+      min-height: 154px;
+      grid-template-columns: 82px minmax(0, 1fr);
+      align-items: center;
+      gap: 17px;
+      padding: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1c1e19, #151713);
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+    .part-card:hover, .part-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #9c7d4d;
+      background: linear-gradient(135deg, #24251e, #191b17);
+    }
+    .card-index {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      color: #62665c;
+      font-size: 10px;
+      letter-spacing: .12em;
+    }
+    .art {
+      position: relative;
+      display: grid;
+      width: 76px;
+      height: 108px;
+      place-items: center;
+      overflow: hidden;
+      border-right: 1px solid #34362f;
+      background: radial-gradient(ellipse at 50% 65%, #d7ad6618, transparent 70%);
+    }
+    .shape { position: relative; display: block; }
+    .shape-stage {
+      width: 32px;
+      height: 87px;
+      border: 1px solid #c8c6bc;
+      border-radius: 5px 5px 2px 2px;
+      background: repeating-linear-gradient(0deg, #d8d6cc 0 15px, #b7b6ac 16px 17px);
+      box-shadow: inset 6px 0 8px #fff2, 4px 5px 14px #0008;
+    }
+    .shape-stage::after {
+      position: absolute;
+      right: -2px;
+      bottom: 7px;
+      left: -2px;
+      height: 13px;
+      background: #25282c;
+      content: "";
+    }
+    .shape-engine {
+      width: 34px;
+      height: 57px;
+      border: 2px solid #9c9b8e;
+      border-radius: 5px 5px 13px 13px;
+      background: linear-gradient(90deg, #45483f, #a4a295 44%, #373930);
+      clip-path: polygon(13% 0, 87% 0, 100% 70%, 83% 100%, 17% 100%, 0 70%);
+    }
+    .shape-engine::after {
+      position: absolute;
+      right: 6px;
+      bottom: 5px;
+      left: 6px;
+      height: 20px;
+      border: 1px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      content: "";
+    }
+    .shape-legs {
+      width: 54px;
+      height: 70px;
+      background:
+        linear-gradient(65deg, transparent 42%, #c4c6bf 43% 47%, transparent 48%),
+        linear-gradient(-65deg, transparent 42%, #c4c6bf 43% 47%, transparent 48%),
+        linear-gradient(90deg, transparent 47%, #c4c6bf 48% 52%, transparent 53%);
+    }
+    .shape-grid {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #aeb5b6;
+      background: repeating-linear-gradient(0deg, transparent 0 8px, #858d91 9px 11px), repeating-linear-gradient(90deg, transparent 0 8px, #858d91 9px 11px);
+      transform: skewY(-8deg);
+    }
+    .shape-octaweb {
+      width: 56px;
+      height: 56px;
+      border: 4px solid #939ba0;
+      background:
+        radial-gradient(circle at center, #d7ad66 0 4px, #30363a 5px 10px, transparent 11px),
+        radial-gradient(circle at 50% 12%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 77% 23%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 88% 50%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 77% 77%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 50% 88%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 23% 77%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 12% 50%, #c4c9c8 0 4px, transparent 5px),
+        radial-gradient(circle at 23% 23%, #c4c9c8 0 4px, transparent 5px),
+        #20262a;
+      clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%);
+      box-shadow: 0 5px 16px #0008;
+    }
+    .shape-ring {
+      width: 52px;
+      height: 70px;
+      border: 5px solid #282c31;
+      border-top-width: 8px;
+      border-bottom-width: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #25282d, #54585d 50%, #22252a);
+    }
+    .shape-fairing {
+      width: 40px;
+      height: 88px;
+      border: 1px solid #c8c6bc;
+      border-radius: 50% 50% 5px 5px;
+      background: linear-gradient(90deg, #aaa99f, #f1eee5 48%, #c9c6bc);
+      clip-path: polygon(50% 0, 96% 24%, 100% 100%, 0 100%, 4% 24%);
+    }
+    .shape-payload {
+      width: 39px;
+      height: 60px;
+      border: 1px solid #aaa99d;
+      background: linear-gradient(90deg, #777a72, #dedbd0 48%, #777a72);
+    }
+    .shape-payload::before, .shape-payload::after {
+      position: absolute;
+      top: 7px;
+      width: 20px;
+      height: 46px;
+      border: 1px solid #9b824f;
+      background: repeating-linear-gradient(0deg, #635d4b 0 5px, #a59366 6px 7px);
+      content: "";
+    }
+    .shape-payload::before { right: 100%; }
+    .shape-payload::after { left: 100%; }
+    .part-copy { min-width: 0; }
+    .part-copy .kind {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .part-copy h3 {
+      margin: 0 0 6px;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    .part-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .open-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      color: #f2efe7;
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .open-model::after { color: var(--gold); content: "↗"; font-size: 14px; }
+    footer {
+      padding: 18px 0 26px;
+      border-top: 1px solid var(--line);
+      color: #85897e;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+    #viewer-page { display: none; min-height: 100vh; }
+    .viewer-intro { padding: 38px 0 22px; }
+    .viewer-intro .eyebrow { margin-bottom: 8px; }
+    .viewer-intro h1 { margin-bottom: 9px; font-size: clamp(36px, 6vw, 58px); }
+    .viewer-intro p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .viewer-shell {
+      position: relative;
+      height: min(68vh, 650px);
+      min-height: 390px;
+      border: 1px solid var(--line);
+      background: radial-gradient(ellipse at 50% 42%, #242821, #10120f 70%);
+    }
+    #model-canvas { display: block; width: 100%; height: 100%; }
+    .viewer-status {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 8px 11px;
+      border: 1px solid #42443c;
+      background: #10120fdd;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .08em;
+    }
+    .viewer-controls { display: flex; flex-wrap: wrap; gap: 9px; padding: 13px 0 36px; }
+    .viewer-controls button {
+      padding: 10px 14px;
+      border: 1px solid #55564b;
+      border-radius: 2px;
+      background: #1b1d18;
+      color: #f2efe7;
+      cursor: pointer;
+      font: inherit;
+      font-size: 11px;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .viewer-controls button:hover { border-color: var(--gold); background: #292a21; }
+    .viewer-controls button.primary { border-color: #987945; color: #e9c786; }
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 32px, 540px); }
+      .hero { grid-template-columns: 1fr; gap: 20px; padding: 55px 0 40px; }
+      .hero-aside { max-width: 290px; }
+      .section-heading { align-items: start; flex-direction: column; gap: 9px; }
+      .cards { grid-template-columns: 1fr; }
+      .part-card { min-height: 150px; }
+      .viewer-shell { height: 58vh; min-height: 340px; }
+    }
+    @media (max-width: 410px) {
+      .part-card { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; padding: 13px; }
+      .art { width: 60px; }
+      .part-copy h3 { font-size: 20px; }
+      .viewer-shell { min-height: 300px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="catalog-page">
+    <header class="topbar wrap">
+      <a class="brand" href="./index.html">ROCKET <span>ATLAS</span></a>
+      <a class="top-link" href="./index.html">← All vehicles</a>
+    </header>
+
+    <main>
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">Full Thrust · Block 4 / Block 5</p>
+          <h1>A reusable booster,<br>built in <em>stages.</em></h1>
+          <p class="hero-copy">Explore the Falcon 9 as individual components. Select a part to open an interactive 3D view, then orbit and zoom to inspect its shape.</p>
+        </div>
+        <div class="hero-aside">
+          <strong>Falcon 9 / FT</strong>
+          Two launch stages<br>
+          Eleven component views<br>
+          Rotate · zoom · isolate
+        </div>
+      </section>
+
+      <section class="catalog wrap" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Component index / 01—03</p>
+            <h2 id="catalog-title">Explore the vehicle</h2>
+          </div>
+          <p>Each component opens in its own 3D view. Drag to rotate and use the scroll wheel or pinch to zoom.</p>
+        </div>
+
+        <section class="stage-section" aria-labelledby="stage-one">
+          <h3 class="stage-title" id="stage-one">01 / First stage <span>LOX · RP-1</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=octaweb">
+              <span class="card-index">01.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-octaweb"></span></span>
+              <span class="part-copy"><span class="kind">Stage 1 · Engine support</span><h3>Octaweb</h3><p>Eight-sided thrust structure and engine mounting frame.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=merlin-1d">
+              <span class="card-index">01.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-engine"></span></span>
+              <span class="part-copy"><span class="kind">Stage 1 · Single engine</span><h3>Merlin 1D</h3><p>One detailed Merlin 1D engine, isolated from the Octaweb structure.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=first-stage">
+              <span class="card-index">01.3</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-stage"></span></span>
+              <span class="part-copy"><span class="kind">Reusable booster · LOX / RP-1</span><h3>First stage</h3><p>The long propellant tank section and its external structure.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="recovery">
+          <h3 class="stage-title" id="recovery">02 / Recovery hardware <span>Reentry · landing</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=landing-legs">
+              <span class="card-index">02.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-legs"></span></span>
+              <span class="part-copy"><span class="kind">Recovery system</span><h3>Landing legs</h3><p>Four deployable legs for booster recovery and landing.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=grid-fins">
+              <span class="card-index">02.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-grid"></span></span>
+              <span class="part-copy"><span class="kind">Reentry control</span><h3>Grid fins</h3><p>Four deployable fins that steer the booster during descent.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="upper-stages">
+          <h3 class="stage-title" id="upper-stages">03 / Upper stages &amp; payload <span>Stage separation · orbit</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=interstage">
+              <span class="card-index">03.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-ring"></span></span>
+              <span class="part-copy"><span class="kind">Stage interface</span><h3>Composite interstage</h3><p>Structural connection between the booster and upper stage.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=second-stage">
+              <span class="card-index">03.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-stage"></span></span>
+              <span class="part-copy"><span class="kind">Stage 2 · LOX / RP-1</span><h3>Second stage</h3><p>Expendable upper-stage propellant tank and structure.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=merlin-vacuum">
+              <span class="card-index">03.3</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-engine"></span></span>
+              <span class="part-copy"><span class="kind">Stage 2 · Vacuum engine</span><h3>Merlin Vacuum</h3><p>The upper stage's single engine with a large expansion nozzle.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=fairing">
+              <span class="card-index">03.4</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-fairing"></span></span>
+              <span class="part-copy"><span class="kind">Payload protection · Isolated</span><h3>Fairing halves</h3><p>Inspect the clamshell halves with their inner surfaces exposed.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=fairing-assembly">
+              <span class="card-index">03.5</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-fairing"></span></span>
+              <span class="part-copy"><span class="kind">Payload protection · Assembly</span><h3>Payload fairing</h3><p>Switch between the assembled fairing and its exploded halves.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=payload">
+              <span class="card-index">03.6</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-payload"></span></span>
+              <span class="part-copy"><span class="kind">Mission-specific</span><h3>Payload</h3><p>A detailed satellite bus with antenna and deployable solar arrays.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer><div class="wrap">Detailed visual recreations use custom procedural geometry and materials; they are not flight-qualified engineering CAD models.</div></footer>
+  </div>
+
+  <main id="viewer-page">
+    <div class="wrap">
+      <header class="viewer-top">
+        <a class="brand" href="./index.html">ROCKET <span>ATLAS</span></a>
+        <a class="back-link" href="./falcon9.html">← Back to components</a>
+      </header>
+      <section class="viewer-intro">
+        <p class="eyebrow" id="viewer-kicker">Falcon 9 / Component view</p>
+        <h1 id="viewer-title">Loading component…</h1>
+        <p id="viewer-description">Loading the interactive 3D component model.</p>
+      </section>
+      <div class="viewer-shell">
+        <canvas id="model-canvas" aria-label="Interactive Falcon 9 component 3D model"></canvas>
+        <div class="viewer-status" id="viewer-status" role="status">Preparing 3D model…</div>
+      </div>
+      <div class="viewer-controls">
+        <button class="primary" id="isolate-button" type="button">Isolate component</button>
+        <button id="whole-button" type="button">View complete Falcon 9</button>
+        <button id="fairing-assembled-button" type="button" hidden>Assembled fairing</button>
+        <button id="fairing-exploded-button" type="button" hidden>Exploded fairing</button>
+        <button id="reset-button" type="button">Reset camera</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const components = {
+      octaweb: {
+        title: 'Octaweb', kicker: 'Stage 1 / Engine support structure',
+        description: 'The isolated octagonal thrust structure, mounting rings, and radial supports. The Merlin 1D engine is available in its own view.'
+      },
+      'merlin-1d': {
+        title: 'Merlin 1D engine', kicker: 'Stage 1 / Single engine',
+        description: 'One detailed Merlin 1D engine, shown separately from the Octaweb mounting structure.'
+      },
+      'first-stage': {
+        title: 'First stage', kicker: 'Stage 1 / LOX · RP-1',
+        description: 'The reusable first-stage tank and exterior structure, shown separately from its engines and recovery hardware.'
+      },
+      'landing-legs': {
+        title: 'Landing legs', kicker: 'Stage 1 / Recovery system',
+        description: 'Four landing legs, isolated from the booster to make their arrangement easier to inspect.'
+      },
+      'grid-fins': {
+        title: 'Grid fins', kicker: 'Stage 1 / Reentry control',
+        description: 'Four grid fins mounted around the upper part of the booster.'
+      },
+      interstage: {
+        title: 'Composite interstage', kicker: 'Stage interface / Separation',
+        description: 'The dark structural section joining the first and second stages.'
+      },
+      'second-stage': {
+        title: 'Second stage', kicker: 'Stage 2 / LOX · RP-1',
+        description: 'The expendable upper-stage tank and exterior structure, shown separately from the Merlin Vacuum engine.'
+      },
+      'merlin-vacuum': {
+        title: 'Merlin Vacuum', kicker: 'Stage 2 / Engine',
+        description: 'A detailed visual recreation of the upper-stage engine, including its large nozzle, cooling rings, pumps, and feed lines.'
+      },
+      fairing: {
+        title: 'Payload fairing', kicker: 'Payload / Composite shell',
+        description: 'Detailed clamshell halves with a shaped nose, inner composite surface, panel joints, edge rails, and latches.'
+      },
+      'fairing-assembly': {
+        title: 'Payload fairing assembly', kicker: 'Payload / Assembled and exploded views',
+        description: 'Switch between the closed fairing assembly and its separated clamshell halves.'
+      },
+      payload: {
+        title: 'Payload', kicker: 'Payload / Satellite',
+        description: 'A detailed satellite visualization with a foil-wrapped bus, deployed solar arrays, thermal panels, and a high-gain antenna.'
+      }
+    };
+
+    const selectedKey = new URLSearchParams(location.search).get('component');
+    const selected = components[selectedKey];
+    if (selected) {
+      document.querySelector('#catalog-page').hidden = true;
+      document.querySelector('#viewer-page').style.display = 'block';
+      document.title = `${selected.title} | Falcon 9 Component Atlas`;
+      document.querySelector('#viewer-title').textContent = selected.title;
+      document.querySelector('#viewer-kicker').textContent = selected.kicker;
+      document.querySelector('#viewer-description').textContent = selected.description;
+      startViewer(selectedKey);
+    }
+
+    function startViewer(componentKey) {
+      const canvas = document.querySelector('#model-canvas');
+      const status = document.querySelector('#viewer-status');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x12140f);
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 1000);
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      } catch (error) {
+        console.error('Unable to initialize the Falcon 9 3D viewer:', error);
+        status.textContent = 'Unable to start 3D graphics in this browser.';
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const environmentGenerator = new THREE.PMREMGenerator(renderer);
+      scene.environment = environmentGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.8;
+      environmentGenerator.dispose();
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minDistance = 1;
+      controls.maxDistance = 500;
+      scene.add(new THREE.HemisphereLight(0xdce7f0, 0x383125, 2.1));
+      const keyLight = new THREE.DirectionalLight(0xffe6bd, 3.2);
+      keyLight.position.set(45, 70, 55);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(1024, 1024);
+      keyLight.shadow.camera.near = 2;
+      keyLight.shadow.camera.far = 180;
+      keyLight.shadow.camera.left = -38;
+      keyLight.shadow.camera.right = 38;
+      keyLight.shadow.camera.top = 70;
+      keyLight.shadow.camera.bottom = -8;
+      scene.add(keyLight);
+      const fillLight = new THREE.DirectionalLight(0x8db7e2, 1.6);
+      fillLight.position.set(-45, 30, -40);
+      scene.add(fillLight);
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(120, 120),
+        new THREE.MeshStandardMaterial({ color: 0x121821, metalness: 0.08, roughness: 0.86 })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -1.92;
+      ground.receiveShadow = true;
+      scene.add(ground);
+      const floor = new THREE.GridHelper(80, 32, 0x514735, 0x292d25);
+      floor.position.y = -1.89;
+      scene.add(floor);
+
+      function makeTexture(width, height, paint) {
+        const source = document.createElement('canvas');
+        source.width = width;
+        source.height = height;
+        paint(source.getContext('2d'), width, height);
+        const texture = new THREE.CanvasTexture(source);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        return texture;
+      }
+
+      const fairingTexture = makeTexture(1024, 2048, (context, width, height) => {
+        const finish = context.createLinearGradient(0, 0, width, 0);
+        finish.addColorStop(0, '#d4d5d4');
+        finish.addColorStop(0.18, '#f4f4f1');
+        finish.addColorStop(0.52, '#e8e9e7');
+        finish.addColorStop(0.82, '#f0f0ed');
+        finish.addColorStop(1, '#d2d4d3');
+        context.fillStyle = finish;
+        context.fillRect(0, 0, width, height);
+        context.globalAlpha = 0.13;
+        context.strokeStyle = '#777d80';
+        context.lineWidth = 2;
+        for (let x = 0; x < width; x += 128) {
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x, height);
+          context.stroke();
+        }
+        context.globalAlpha = 0.09;
+        context.lineWidth = 3;
+        for (let y = 256; y < height; y += 512) {
+          context.beginPath();
+          context.moveTo(0, y);
+          context.lineTo(width, y);
+          context.stroke();
+        }
+        context.globalAlpha = 0.08;
+        context.strokeStyle = '#ffffff';
+        context.lineWidth = 1;
+        for (let x = -height; x < width; x += 22) {
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x + height, height);
+          context.stroke();
+        }
+        context.globalAlpha = 1;
+      });
+
+      const foilTexture = makeTexture(768, 768, (context, width, height) => {
+        const foil = context.createLinearGradient(0, 0, width, height);
+        foil.addColorStop(0, '#8e7040');
+        foil.addColorStop(0.2, '#d9bd79');
+        foil.addColorStop(0.47, '#92784a');
+        foil.addColorStop(0.7, '#ead79a');
+        foil.addColorStop(1, '#8b7044');
+        context.fillStyle = foil;
+        context.fillRect(0, 0, width, height);
+        context.lineWidth = 4;
+        for (let x = 0; x <= width; x += 96) {
+          context.strokeStyle = x % 192 ? '#614f34' : '#f2dfa5';
+          context.globalAlpha = 0.52;
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x, height);
+          context.stroke();
+        }
+        for (let y = 0; y <= height; y += 96) {
+          context.strokeStyle = y % 192 ? '#6c5839' : '#f5e4ad';
+          context.globalAlpha = 0.48;
+          context.beginPath();
+          context.moveTo(0, y);
+          context.lineTo(width, y);
+          context.stroke();
+        }
+        context.globalAlpha = 0.17;
+        context.strokeStyle = '#fff4cc';
+        context.lineWidth = 1;
+        for (let y = 12; y < height; y += 24) {
+          context.beginPath();
+          context.moveTo(0, y);
+          context.lineTo(width, y + 35);
+          context.stroke();
+        }
+        context.globalAlpha = 1;
+      });
+
+      const solarTexture = makeTexture(1024, 512, (context, width, height) => {
+        const cells = context.createLinearGradient(0, 0, 0, height);
+        cells.addColorStop(0, '#183250');
+        cells.addColorStop(0.5, '#254c77');
+        cells.addColorStop(1, '#10243c');
+        context.fillStyle = cells;
+        context.fillRect(0, 0, width, height);
+        const columns = 16;
+        const rows = 8;
+        const cellWidth = width / columns;
+        const cellHeight = height / rows;
+        for (let row = 0; row < rows; row++) {
+          for (let column = 0; column < columns; column++) {
+            const shade = (row + column) % 3 === 0 ? '#38638c' : '#203f66';
+            context.fillStyle = shade;
+            context.fillRect(column * cellWidth + 3, row * cellHeight + 3, cellWidth - 7, cellHeight - 7);
+          }
+        }
+        context.strokeStyle = '#9eb6c5';
+        context.globalAlpha = 0.72;
+        context.lineWidth = 3;
+        context.strokeRect(2, 2, width - 4, height - 4);
+        context.globalAlpha = 0.62;
+        context.lineWidth = 2;
+        for (let column = 1; column < columns; column++) {
+          context.beginPath();
+          context.moveTo(column * cellWidth, 0);
+          context.lineTo(column * cellWidth, height);
+          context.stroke();
+        }
+        for (let row = 1; row < rows; row++) {
+          context.beginPath();
+          context.moveTo(0, row * cellHeight);
+          context.lineTo(width, row * cellHeight);
+          context.stroke();
+        }
+        context.globalAlpha = 1;
+      });
+
+      const materials = {
+        white: new THREE.MeshStandardMaterial({ color: 0xe9e7df, metalness: 0.08, roughness: 0.42 }),
+        whiteShade: new THREE.MeshStandardMaterial({ color: 0xcac9c1, metalness: 0.12, roughness: 0.52 }),
+        black: new THREE.MeshStandardMaterial({ color: 0x202329, metalness: 0.32, roughness: 0.55 }),
+        carbon: new THREE.MeshStandardMaterial({ color: 0x111419, metalness: 0.22, roughness: 0.68 }),
+        steel: new THREE.MeshStandardMaterial({ color: 0x9ca5a8, metalness: 0.8, roughness: 0.3 }),
+        darkSteel: new THREE.MeshStandardMaterial({ color: 0x525b60, metalness: 0.82, roughness: 0.34 }),
+        gold: new THREE.MeshStandardMaterial({ color: 0xb88b42, metalness: 0.68, roughness: 0.38 }),
+        blue: new THREE.MeshStandardMaterial({ color: 0x315e86, metalness: 0.46, roughness: 0.34 }),
+        solar: new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: solarTexture, metalness: 0.36, roughness: 0.28, clearcoat: 0.48 }),
+        fairingSkin: new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: fairingTexture, metalness: 0.2, roughness: 0.31, clearcoat: 0.38, clearcoatRoughness: 0.24, side: THREE.DoubleSide }),
+        fairingInner: new THREE.MeshStandardMaterial({ color: 0x25292c, metalness: 0.48, roughness: 0.62, side: THREE.DoubleSide }),
+        goldFoil: new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: foilTexture, metalness: 0.64, roughness: 0.37, clearcoat: 0.3 }),
+        engineMetal: new THREE.MeshPhysicalMaterial({ color: 0xa9b1b5, metalness: 0.94, roughness: 0.24, clearcoat: 0.4 }),
+        engineDark: new THREE.MeshPhysicalMaterial({ color: 0x333a3e, metalness: 0.88, roughness: 0.32 }),
+        engineHot: new THREE.MeshStandardMaterial({ color: 0x684d3e, metalness: 0.82, roughness: 0.3, side: THREE.DoubleSide }),
+        nozzleInterior: new THREE.MeshStandardMaterial({ color: 0x111416, metalness: 0.66, roughness: 0.46, side: THREE.DoubleSide }),
+        radiator: new THREE.MeshPhysicalMaterial({ color: 0xc8c9c4, metalness: 0.74, roughness: 0.3, clearcoat: 0.3 })
+      };
+
+      const vehicle = new THREE.Group();
+      scene.add(vehicle);
+      const parts = {};
+      function part(key, build) {
+        const group = new THREE.Group();
+        group.name = key;
+        vehicle.add(group);
+        parts[key] = group;
+        build(group);
+      }
+      function cylinder(parent, radiusTop, radiusBottom, height, y, material, segments = 40, openEnded = false, start = 0, length = Math.PI * 2) {
+        const mesh = new THREE.Mesh(
+          new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments, 1, openEnded, start, length),
+          material
+        );
+        mesh.position.y = y;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+      function ring(parent, radius, y, tube, material) {
+        const mesh = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 8, 48), material);
+        mesh.rotation.x = Math.PI / 2;
+        mesh.position.y = y;
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+      function box(parent, width, height, depth, position, material) {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), material);
+        mesh.position.set(position[0], position[1], position[2]);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+      function rod(parent, start, end, radius, material) {
+        const a = new THREE.Vector3(start[0], start[1], start[2]);
+        const b = new THREE.Vector3(end[0], end[1], end[2]);
+        const direction = b.clone().sub(a);
+        const mesh = new THREE.Mesh(
+          new THREE.CylinderGeometry(radius * 0.8, radius, direction.length(), 12),
+          material
+        );
+        mesh.position.copy(a.add(b).multiplyScalar(0.5));
+        mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function tube(parent, points, radius, material, segments = 36) {
+        const curve = new THREE.CatmullRomCurve3(points.map(point => new THREE.Vector3(...point)));
+        const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, segments, radius, 8, false), material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function lathe(parent, profile, material, segments = 64, start = 0, length = Math.PI * 2) {
+        const mesh = new THREE.Mesh(
+          new THREE.LatheGeometry(profile.map(point => new THREE.Vector2(point[0], point[1])), segments, start, length),
+          material
+        );
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function buildMerlin(parent, x, z, baseY, scale, vacuum = false) {
+        const engine = new THREE.Group();
+        engine.position.set(x, baseY, z);
+        engine.scale.set(scale, scale * (vacuum ? 0.8 : 1), scale);
+        parent.add(engine);
+
+        const exitRadius = vacuum ? 0.62 : 0.43;
+        const throatRadius = vacuum ? 0.17 : 0.14;
+        const bellHeight = vacuum ? 1.72 : 1.34;
+        const profile = [
+          [exitRadius, 0],
+          [exitRadius * 0.98, 0.055],
+          [exitRadius * 0.88, 0.17],
+          [exitRadius * 0.73, bellHeight * 0.34],
+          [exitRadius * 0.55, bellHeight * 0.56],
+          [exitRadius * 0.38, bellHeight * 0.75],
+          [throatRadius * 1.28, bellHeight * 0.91],
+          [throatRadius, bellHeight],
+          [throatRadius * 0.84, bellHeight - 0.07],
+          [throatRadius * 1.13, bellHeight * 0.82],
+          [exitRadius * 0.43, bellHeight * 0.58],
+          [exitRadius * 0.63, bellHeight * 0.34],
+          [exitRadius * 0.82, 0.16],
+          [exitRadius * 0.9, 0.09]
+        ];
+        lathe(engine, profile, materials.engineMetal, 48);
+        const innerWall = profile.slice(0, 8).reverse().map(([radius, y]) => [Math.max(radius - 0.035, 0.055), y + 0.015]);
+        lathe(engine, innerWall, materials.nozzleInterior, 40);
+        ring(engine, exitRadius * 0.97, 0.055, vacuum ? 0.045 : 0.028, materials.engineDark);
+        ring(engine, throatRadius * 1.2, bellHeight * 0.92, 0.022, materials.engineHot);
+
+        const ribs = vacuum ? 22 : 14;
+        for (let index = 1; index < ribs; index++) {
+          const progress = index / ribs;
+          const y = bellHeight * progress;
+          const radius = exitRadius - (exitRadius - throatRadius) * Math.pow(progress, 0.78);
+          ring(engine, radius, y, vacuum ? 0.014 : 0.011, index % 4 === 0 ? materials.engineDark : materials.engineMetal);
+        }
+
+        cylinder(engine, vacuum ? 0.27 : 0.24, vacuum ? 0.31 : 0.28, 0.32, bellHeight + 0.15, materials.engineDark, 32);
+        cylinder(engine, vacuum ? 0.23 : 0.21, vacuum ? 0.28 : 0.25, 0.42, bellHeight + 0.48, materials.engineMetal, 28);
+        cylinder(engine, vacuum ? 0.3 : 0.27, vacuum ? 0.3 : 0.27, 0.1, bellHeight + 0.72, materials.engineDark, 28);
+        ring(engine, vacuum ? 0.3 : 0.27, bellHeight + 0.78, 0.035, materials.gold);
+        ring(engine, vacuum ? 0.25 : 0.22, bellHeight + 0.3, 0.025, materials.engineMetal);
+
+        const pumpX = vacuum ? 0.39 : 0.31;
+        cylinder(engine, 0.11, 0.13, 0.28, bellHeight + 0.52, materials.engineDark, 18).position.x = pumpX;
+        cylinder(engine, 0.14, 0.1, 0.19, bellHeight + 0.43, materials.engineMetal, 18).position.z = 0.2;
+        for (let index = 0; index < 3; index++) {
+          const angle = index * Math.PI * 2 / 3;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          tube(engine, [
+            [cos * 0.22, bellHeight + 0.64, sin * 0.22],
+            [cos * 0.38, bellHeight + 0.48, sin * 0.38],
+            [cos * 0.42, bellHeight + 0.15, sin * 0.42],
+            [cos * exitRadius * 0.86, bellHeight * 0.62, sin * exitRadius * 0.86],
+            [cos * exitRadius * 0.9, 0.2, sin * exitRadius * 0.9]
+          ], vacuum ? 0.025 : 0.018, index === 0 ? materials.gold : materials.engineDark, 28);
+        }
+        for (let index = 0; index < 6; index++) {
+          const angle = index * Math.PI / 3;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          rod(engine, [cos * 0.2, bellHeight + 0.34, sin * 0.2], [cos * 0.36, bellHeight + 0.05, sin * 0.36], 0.018, materials.engineMetal);
+        }
+        return engine;
+      }
+
+      part('octaweb', group => {
+        cylinder(group, 1.58, 1.58, 0.34, 1.92, materials.black, 8, true);
+        cylinder(group, 0.44, 0.44, 0.24, 2.03, materials.black, 8, true);
+        ring(group, 1.52, 2.08, 0.09, materials.engineMetal);
+        for (let index = 0; index < 8; index++) {
+          const angle = index * Math.PI / 4;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          const nextAngle = angle + Math.PI / 4;
+          rod(group, [cos * 1.48, 2.08, sin * 1.48], [Math.cos(nextAngle) * 1.48, 2.08, Math.sin(nextAngle) * 1.48], 0.075, materials.engineMetal);
+          rod(group, [cos * 0.42, 2.05, sin * 0.42], [cos * 1.42, 2.05, sin * 1.42], 0.065, materials.darkSteel);
+          const mount = new THREE.Mesh(new THREE.TorusGeometry(0.39, 0.045, 10, 32), materials.engineMetal);
+          mount.rotation.x = Math.PI / 2;
+          mount.position.set(cos * 1.03, 2.12, sin * 1.03);
+          group.add(mount);
+          const rivet = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), materials.gold);
+          rivet.position.set(cos * 1.5, 2.17, sin * 1.5);
+          group.add(rivet);
+        }
+        const centerMount = new THREE.Mesh(new THREE.TorusGeometry(0.39, 0.045, 10, 32), materials.engineMetal);
+        centerMount.rotation.x = Math.PI / 2;
+        centerMount.position.y = 2.12;
+        group.add(centerMount);
+      });
+
+      part('merlin-1d', group => {
+        buildMerlin(group, 0, 0, 0.04, 1, false);
+      });
+
+      part('first-stage', group => {
+        cylinder(group, 1.82, 1.82, 39.8, 22.3, materials.white, 48);
+        cylinder(group, 1.835, 1.835, 2.1, 3.65, materials.black, 48);
+        cylinder(group, 1.84, 1.84, 0.38, 42.05, materials.whiteShade, 48);
+        ring(group, 1.84, 4.75, 0.045, materials.darkSteel);
+        ring(group, 1.84, 41.75, 0.045, materials.steel);
+        box(group, 0.09, 35, 0.09, [0, 22, 1.84], materials.whiteShade);
+        box(group, 0.055, 34, 0.055, [0.9, 22, 1.6], materials.whiteShade);
+      });
+
+      part('landing-legs', group => {
+        for (let index = 0; index < 4; index++) {
+          const angle = Math.PI / 4 + index * Math.PI / 2;
+          const dx = Math.cos(angle);
+          const dz = Math.sin(angle);
+          rod(group, [dx * 1.58, 4.6, dz * 1.58], [dx * 2.62, 1.0, dz * 2.62], 0.115, materials.steel);
+          rod(group, [dx * 1.62, 2.9, dz * 1.62], [dx * 2.62, 1.0, dz * 2.62], 0.07, materials.darkSteel);
+          rod(group, [dx * 2.62, 1.0, dz * 2.62], [dx * 3.05, 0.18, dz * 3.05], 0.09, materials.steel);
+          rod(group, [dx * 2.88, 0.16, dz * 2.88], [dx * 3.28, 0.16, dz * 3.28], 0.11, materials.darkSteel);
+        }
+      });
+
+      part('grid-fins', group => {
+        for (let index = 0; index < 4; index++) {
+          const angle = index * Math.PI / 2;
+          const fin = new THREE.Group();
+          fin.position.set(Math.sin(angle) * 1.78, 39.3, Math.cos(angle) * 1.78);
+          fin.rotation.y = angle;
+          group.add(fin);
+          box(fin, 0.08, 1.28, 0.12, [-0.48, 0, 0], materials.steel);
+          box(fin, 0.08, 1.28, 0.12, [0.48, 0, 0], materials.steel);
+          box(fin, 1.04, 0.08, 0.12, [0, -0.6, 0], materials.steel);
+          box(fin, 1.04, 0.08, 0.12, [0, 0.6, 0], materials.steel);
+          for (let bar = 0; bar < 4; bar++) {
+            const x = -0.3 + bar * 0.2;
+            box(fin, 0.035, 1.12, 0.07, [x, 0, 0], materials.darkSteel);
+            box(fin, 0.9, 0.035, 0.07, [0, -0.4 + bar * 0.27, 0], materials.darkSteel);
+          }
+        }
+      });
+
+      part('interstage', group => {
+        cylinder(group, 1.83, 1.83, 4.8, 44.6, materials.carbon, 48, true);
+        ring(group, 1.84, 42.25, 0.08, materials.darkSteel);
+        ring(group, 1.84, 46.95, 0.08, materials.darkSteel);
+        for (let index = 0; index < 8; index++) {
+          const angle = index * Math.PI / 4;
+          const rib = new THREE.Group();
+          rib.position.set(Math.cos(angle) * 1.82, 44.6, Math.sin(angle) * 1.82);
+          rib.rotation.y = -angle;
+          group.add(rib);
+          box(rib, 0.06, 4.3, 0.06, [0, 0, 0], materials.black);
+        }
+      });
+
+      part('second-stage', group => {
+        cylinder(group, 1.78, 1.78, 12.35, 53.13, materials.white, 48);
+        ring(group, 1.8, 47.05, 0.05, materials.steel);
+        ring(group, 1.8, 59.3, 0.055, materials.whiteShade);
+        box(group, 0.065, 10.2, 0.065, [0, 53.2, 1.79], materials.whiteShade);
+      });
+
+      part('merlin-vacuum', group => {
+        buildMerlin(group, 0, 0, 43.55, 1.82, true);
+      });
+
+      part('fairing', group => {
+        const profile = [
+          [1.83, 56.9], [2.08, 57.2], [2.36, 57.7], [2.56, 58.3],
+          [2.6, 58.9], [2.6, 65.0], [2.58, 65.4], [2.51, 65.8],
+          [2.38, 66.2], [2.18, 66.6], [1.9, 67.0], [1.58, 67.4],
+          [1.25, 67.8], [0.92, 68.2], [0.62, 68.6], [0.36, 69.0],
+          [0.15, 69.45], [0.035, 69.85], [0, 70]
+        ];
+        const innerProfile = profile.map(([radius, y]) => [radius > 0.06 ? radius - 0.055 : 0, y]);
+        function radiusAt(height) {
+          for (let index = 1; index < profile.length; index++) {
+            if (profile[index][1] >= height) {
+              const previous = profile[index - 1];
+              const next = profile[index];
+              const amount = (height - previous[1]) / (next[1] - previous[1]);
+              return THREE.MathUtils.lerp(previous[0], next[0], amount);
+            }
+          }
+          return 0;
+        }
+        const halves = [];
+        for (let index = 0; index < 2; index++) {
+          const half = new THREE.Group();
+          group.add(half);
+          const start = index * Math.PI;
+          lathe(half, profile, materials.fairingSkin, 96, start, Math.PI);
+          lathe(half, innerProfile, materials.fairingInner, 72, start, Math.PI);
+
+          function halfArc(radius, y, thickness, material) {
+            const points = [];
+            for (let step = 0; step <= 32; step++) {
+              const angle = start + step / 32 * Math.PI;
+              points.push([Math.sin(angle) * radius, y, Math.cos(angle) * radius]);
+            }
+            tube(half, points, thickness, material, 64);
+          }
+          for (const [radius, y] of [[1.87, 56.98], [2.63, 58.95], [2.61, 64.98], [2.56, 65.55], [2.43, 66.05]]) {
+            halfArc(radius, y, y < 59 ? 0.055 : 0.014, y < 59 ? materials.engineDark : materials.whiteShade);
+          }
+
+          for (const angle of [start, start + Math.PI]) {
+            const edge = profile.map(([radius, y]) => [
+              Math.sin(angle) * (radius + 0.018),
+              y,
+              Math.cos(angle) * (radius + 0.018)
+            ]);
+            tube(half, edge, 0.025, materials.engineDark, 80);
+            const innerEdge = innerProfile.map(([radius, y]) => [
+              Math.sin(angle) * radius,
+              y,
+              Math.cos(angle) * radius
+            ]);
+            tube(half, innerEdge, 0.032, materials.engineMetal, 80);
+          }
+
+          for (let rib = 1; rib <= 3; rib++) {
+            const angle = start + Math.PI * rib / 4;
+            const points = profile.map(([radius, y]) => [
+              Math.sin(angle) * (radius - 0.025),
+              y,
+              Math.cos(angle) * (radius - 0.025)
+            ]);
+            tube(half, points, 0.016, materials.engineDark, 80);
+          }
+
+          for (let bolt = 0; bolt < 16; bolt++) {
+            const angle = start + (bolt + 0.5) * Math.PI / 16;
+            const rivet = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), materials.engineMetal);
+            rivet.position.set(Math.sin(angle) * 2.63, 59.08, Math.cos(angle) * 2.63);
+            rivet.castShadow = true;
+            half.add(rivet);
+          }
+
+          for (let latch = 0; latch < 4; latch++) {
+            const y = 57.45 + latch * 1.08;
+            const radius = radiusAt(y);
+            for (const angle of [start, start + Math.PI]) {
+              const clasp = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.24, 0.1), materials.engineMetal);
+              clasp.position.set(Math.sin(angle) * (radius + 0.045), y, Math.cos(angle) * (radius + 0.045));
+              clasp.rotation.y = -angle;
+              clasp.castShadow = true;
+              half.add(clasp);
+            }
+          }
+          halves.push(half);
+        }
+        group.userData.halves = halves;
+      });
+
+      part('payload', group => {
+        cylinder(group, 0.86, 0.95, 0.34, 62.25, materials.engineMetal, 48);
+        cylinder(group, 0.79, 0.79, 0.12, 62.48, materials.engineDark, 48);
+        box(group, 1.12, 2.05, 1.12, [0, 63.68, 0], materials.goldFoil);
+        box(group, 0.82, 1.25, 0.045, [0, 63.72, 0.58], materials.radiator);
+        box(group, 0.82, 1.25, 0.045, [0, 63.72, -0.58], materials.radiator);
+        box(group, 0.045, 1.34, 0.82, [0.58, 63.72, 0], materials.engineDark);
+        box(group, 0.045, 1.34, 0.82, [-0.58, 63.72, 0], materials.engineDark);
+        box(group, 1.04, 0.12, 1.04, [0, 64.79, 0], materials.engineMetal);
+        box(group, 0.98, 0.1, 0.98, [0, 62.57, 0], materials.engineDark);
+
+        for (const side of [-1, 1]) {
+          for (const depth of [-1, 1]) {
+            rod(group, [side * 0.54, 62.72, depth * 0.54], [side * 0.54, 64.67, depth * 0.54], 0.035, materials.engineMetal);
+            for (let level = 0; level < 4; level++) {
+              const rivet = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), materials.engineMetal);
+              rivet.position.set(side * 0.6, 63.12 + level * 0.38, depth * 0.6);
+              group.add(rivet);
+            }
+          }
+          box(group, 0.38, 0.48, 0.08, [side * 0.72, 63.25, 0], materials.engineDark);
+          cylinder(group, 0.13, 0.18, 0.26, 64.48, materials.engineMetal, 24).position.x = side * 0.28;
+        }
+
+        const dish = lathe(group, [[0, 0], [0.15, 0.012], [0.32, 0.05], [0.49, 0.12], [0.64, 0.21]], materials.engineMetal, 48);
+        dish.position.set(0, 64.96, 0.72);
+        dish.rotation.x = Math.PI / 2;
+        const dishRim = new THREE.Mesh(new THREE.TorusGeometry(0.64, 0.025, 10, 48), materials.whiteShade);
+        dishRim.position.set(0, 64.96, 0.72);
+        dishRim.rotation.x = Math.PI / 2;
+        group.add(dishRim);
+        rod(group, [0, 64.3, 0.68], [0, 65.02, 0.77], 0.028, materials.engineMetal);
+        rod(group, [-0.38, 64.55, 0.64], [0, 65.02, 0.77], 0.022, materials.engineMetal);
+        rod(group, [0.38, 64.55, 0.64], [0, 65.02, 0.77], 0.022, materials.engineMetal);
+
+        const feed = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.12, 0.28, 20), materials.gold);
+        feed.position.set(0, 65.12, 0.78);
+        feed.rotation.x = Math.PI / 2;
+        group.add(feed);
+        cylinder(group, 0.06, 0.08, 0.46, 65.1, materials.engineMetal, 16).position.x = -0.78;
+        box(group, 0.42, 0.28, 0.38, [0.82, 64.63, 0.12], materials.whiteShade);
+        box(group, 0.32, 0.18, 0.24, [0.82, 64.4, 0.12], materials.engineDark);
+        tube(group, [[0.56, 63.05, 0.28], [0.78, 63.24, 0.26], [0.77, 64.05, 0.2], [0.58, 64.22, 0.2]], 0.022, materials.engineMetal);
+
+        const arrays = [];
+        for (const side of [-1, 1]) {
+          const wing = new THREE.Group();
+          group.add(wing);
+          arrays.push(wing);
+          const pivotX = side * 0.62;
+          for (let section = 0; section < 2; section++) {
+            const x = side * (1.36 + section * 1.3);
+            box(wing, 1.2, 2.25, 0.06, [x, 63.75, 0], materials.solar);
+            box(wing, 0.055, 2.34, 0.1, [x - 0.61, 63.75, 0], materials.engineMetal);
+            box(wing, 0.055, 2.34, 0.1, [x + 0.61, 63.75, 0], materials.engineMetal);
+            box(wing, 1.24, 0.055, 0.1, [x, 62.58, 0], materials.engineMetal);
+            box(wing, 1.24, 0.055, 0.1, [x, 64.92, 0], materials.engineMetal);
+            rod(wing, [pivotX, 63.75, 0], [x - side * 0.55, 63.75, 0], 0.035, materials.engineDark);
+            for (let busbar = 0; busbar < 2; busbar++) {
+              box(wing, 0.025, 2.18, 0.075, [x + (busbar ? 0.32 : -0.32), 63.75, 0.045], materials.whiteShade);
+            }
+          }
+          cylinder(wing, 0.12, 0.12, 0.3, 63.75, materials.engineMetal, 16).position.x = pivotX;
+        }
+        group.userData.solarArrays = arrays;
+      });
+
+      const controlsHome = document.querySelector('#whole-button');
+      const fairingAssembledButton = document.querySelector('#fairing-assembled-button');
+      const fairingExplodedButton = document.querySelector('#fairing-exploded-button');
+      const hasFairingAssemblyControls = componentKey === 'fairing-assembly';
+      fairingAssembledButton.hidden = !hasFairingAssemblyControls;
+      fairingExplodedButton.hidden = !hasFairingAssemblyControls;
+      let focusBounds = new THREE.Box3();
+
+      function visibleBounds(root) {
+        const bounds = new THREE.Box3();
+        root.updateMatrixWorld(true);
+        function visit(node, parentVisible) {
+          const visible = parentVisible && node.visible;
+          if (!visible) return;
+          if (node.isMesh && node.geometry) {
+            if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+            if (node.geometry.boundingBox) bounds.expandByObject(node);
+          }
+          node.children.forEach(child => visit(child, visible));
+        }
+        visit(root, true);
+        return bounds;
+      }
+
+      function focusOn(bounds) {
+        if (bounds.isEmpty()) {
+          status.textContent = 'No visible geometry is available for this view.';
+          return;
+        }
+        focusBounds.copy(bounds);
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const widePayload = componentKey === 'payload';
+        const distance = Math.max(maxSize * (widePayload ? 0.9 : 1.75), 3);
+        const viewFromBelow = componentKey === 'merlin-1d' || componentKey === 'merlin-vacuum';
+        const verticalView = viewFromBelow ? -0.42 : (widePayload ? 0.3 : 0.55);
+        const horizontalView = widePayload ? 0.12 : 0.85;
+        const depthView = widePayload ? 1 : 1.1;
+        camera.position.set(center.x + distance * horizontalView, center.y + distance * verticalView, center.z + distance * depthView);
+        camera.near = Math.max(distance / 1000, 0.01);
+        camera.far = Math.max(distance * 30, 200);
+        camera.updateProjectionMatrix();
+        controls.target.copy(center);
+        controls.minDistance = Math.max(maxSize * 0.18, 0.5);
+        controls.maxDistance = Math.max(maxSize * 8, 20);
+        controls.update();
+      }
+
+      function setFairingPose(exploded) {
+        const halves = parts.fairing.userData.halves;
+        halves[0].position.x = exploded ? -0.65 : 0;
+        halves[1].position.x = exploded ? 0.65 : 0;
+        halves[0].rotation.z = exploded ? 0.045 : 0;
+        halves[1].rotation.z = exploded ? -0.045 : 0;
+        fairingAssembledButton.classList.toggle('primary', !exploded);
+        fairingExplodedButton.classList.toggle('primary', exploded);
+      }
+
+      function showSelection() {
+        const selectedPart = componentKey === 'fairing-assembly' ? 'fairing' : componentKey;
+        Object.entries(parts).forEach(([key, group]) => { group.visible = key === selectedPart; });
+        parts.payload.userData.solarArrays.forEach(array => { array.visible = componentKey === 'payload'; });
+        setFairingPose(componentKey === 'fairing');
+        focusOn(visibleBounds(vehicle));
+        status.textContent = componentKey === 'fairing'
+          ? 'Fairing halves separated · drag to rotate'
+          : (componentKey === 'fairing-assembly'
+            ? 'Payload fairing assembled · drag to rotate'
+            : `${components[componentKey].title} isolated · drag to rotate`);
+      }
+
+      function showFairingAssembly(exploded) {
+        Object.entries(parts).forEach(([key, group]) => { group.visible = key === 'fairing'; });
+        parts.payload.userData.solarArrays.forEach(array => { array.visible = false; });
+        setFairingPose(exploded);
+        focusOn(visibleBounds(vehicle));
+        status.textContent = exploded
+          ? 'Payload fairing exploded · drag to rotate'
+          : 'Payload fairing assembled · drag to rotate';
+      }
+
+      function showWholeVehicle() {
+        Object.values(parts).forEach(group => { group.visible = true; });
+        parts.payload.userData.solarArrays.forEach(array => { array.visible = false; });
+        setFairingPose(false);
+        focusOn(visibleBounds(vehicle));
+        status.textContent = 'Complete Falcon 9 · drag to rotate';
+      }
+
+      function resize() {
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        camera.aspect = bounds.width / bounds.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(bounds.width, bounds.height, false);
+      }
+
+      showSelection();
+      document.querySelector('#isolate-button').addEventListener('click', showSelection);
+      controlsHome.addEventListener('click', showWholeVehicle);
+      fairingAssembledButton.addEventListener('click', () => showFairingAssembly(false));
+      fairingExplodedButton.addEventListener('click', () => showFairingAssembly(true));
+      document.querySelector('#reset-button').addEventListener('click', () => focusOn(focusBounds));
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+
+      function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+  </script>
+</body>
+</html>

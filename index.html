@@ -104,6 +104,15 @@
       color: var(--gold);
       background: transparent;
     }
+    .launch-link.secondary {
+      color: var(--gold);
+      background: transparent;
+    }
+    .launch-link.secondary:hover, .launch-link.secondary:focus-visible {
+      color: #10120f;
+      background: var(--gold);
+    }
+    .launch-options { display: flex; flex-wrap: wrap; gap: 12px; }
     .launch-link span { font-size: 18px; line-height: 1; }
     .rocket-stage {
       position: relative;
@@ -239,9 +248,14 @@
         <p class="eyebrow">The Moon rocket · 1967—1973</p>
         <h1>A giant leap,<br>in <em>three stages.</em></h1>
         <p class="intro">Meet the Saturn V: the most powerful rocket ever flown. Explore its stages, engines, and the engineering that carried astronauts to the Moon.</p>
-        <a class="launch-link" href="saturnV.html">
-          Explore the Saturn V <span aria-hidden="true">→</span>
-        </a>
+        <nav class="launch-options" aria-label="Rocket explorers">
+          <a class="launch-link" href="saturnV.html">
+            Explore the Saturn V <span aria-hidden="true">→</span>
+          </a>
+          <a class="launch-link secondary" href="falcon9.html">
+            Explore Falcon 9 <span aria-hidden="true">→</span>
+          </a>
+        </nav>
       </section>
 
       <div class="rocket-stage" role="img" aria-label="Illustration of a Saturn V rocket">
