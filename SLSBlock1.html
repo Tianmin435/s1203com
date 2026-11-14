@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>SLS Component Atlas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2efe7;
+      --muted: #a7aaa0;
+      --gold: #d7ad66;
+      --orange: #e6752e;
+      --line: #383b33;
+      --panel: #191b17;
+      --bg: #10120f;
+      --serif: Georgia, "Times New Roman", serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * { box-sizing: border-box; }
+    body { min-width: 320px; min-height: 100vh; margin: 0; }
+    a { color: inherit; }
+    button { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar {
+      display: flex;
+      min-height: 74px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .17em;
+      text-decoration: none;
+    }
+    .brand span { color: var(--gold); }
+    .top-link, .back-link { color: var(--muted); font-size: 12px; text-decoration: none; }
+    .top-link:hover, .back-link:hover { color: var(--gold); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      align-items: end;
+      gap: 28px;
+      padding: 66px 0 52px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow, .section-kicker {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 740px;
+      margin-bottom: 17px;
+      font-family: var(--serif);
+      font-size: clamp(44px, 8vw, 84px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .96;
+    }
+    h1 em { color: var(--orange); font-weight: 400; }
+    .hero-copy {
+      max-width: 570px;
+      margin-bottom: 0;
+      color: #b7b9b1;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .hero-aside {
+      padding: 0 0 4px 18px;
+      border-left: 1px solid var(--orange);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .hero-aside strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .vehicle-switch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 22px;
+    }
+    .vehicle-switch a {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      padding: 0 13px;
+      border: 1px solid #55564b;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .vehicle-switch a:hover, .vehicle-switch a[aria-current="page"] {
+      border-color: var(--orange);
+      color: #f2c397;
+      background: #e6752e12;
+    }
+    .catalog { padding: 54px 0 72px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .section-heading h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .section-heading > p {
+      max-width: 390px;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .stage-section { padding-top: 28px; }
+    .stage-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .stage-title span { color: #797d73; font-weight: 500; letter-spacing: .04em; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .part-card {
+      position: relative;
+      display: grid;
+      min-height: 162px;
+      grid-template-columns: 84px minmax(0, 1fr);
+      align-items: center;
+      gap: 18px;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #1c1e19, #151713);
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease;
+    }
+    .part-card[hidden] { display: none; }
+    .part-card:hover, .part-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #9c7d4d;
+    }
+    .card-index {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      color: #62665c;
+      font-size: 10px;
+      letter-spacing: .12em;
+    }
+    .art {
+      display: grid;
+      width: 76px;
+      height: 110px;
+      place-items: center;
+      border-right: 1px solid #34362f;
+      background: radial-gradient(ellipse at 50% 65%, #e6752e1b, transparent 70%);
+    }
+    .shape { position: relative; display: block; }
+    .shape-core {
+      width: 25px;
+      height: 88px;
+      border: 1px solid #a84c20;
+      border-radius: 9px 9px 2px 2px;
+      background: linear-gradient(90deg, #b85422, #f28337 48%, #c45922);
+      box-shadow: inset 4px 0 7px #fff2;
+    }
+    .shape-core::before {
+      position: absolute;
+      top: 17px;
+      right: 0;
+      left: 0;
+      height: 3px;
+      background: #e5dfd0;
+      content: "";
+    }
+    .shape-engine {
+      width: 34px;
+      height: 57px;
+      border: 2px solid #9da2a1;
+      border-top: 8px solid #b1b5b2;
+      background: linear-gradient(90deg, #383e40, #929897 48%, #303638);
+      clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+    }
+    .shape-booster {
+      width: 19px;
+      height: 72px;
+      border: 1px solid #c5c6c1;
+      border-radius: 8px 8px 3px 3px;
+      background: repeating-linear-gradient(0deg, #e8e7e0 0 12px, #4e5353 13px 15px);
+    }
+    .shape-upper {
+      width: 29px;
+      height: 70px;
+      border: 1px solid #c7c6bb;
+      border-radius: 8px 8px 2px 2px;
+      background: linear-gradient(90deg, #92938c, #e5e2d7 50%, #a8a69e);
+    }
+    .shape-fairing {
+      width: 34px;
+      height: 84px;
+      border: 1px solid #c8c6bc;
+      background: linear-gradient(90deg, #aaa99f, #f1eee5 48%, #c9c6bc);
+      clip-path: polygon(50% 0, 92% 23%, 100% 100%, 0 100%, 8% 23%);
+    }
+    .shape-capsule {
+      width: 39px;
+      height: 48px;
+      border: 1px solid #bcbcb4;
+      border-radius: 50% 50% 24% 24%;
+      background: linear-gradient(90deg, #9d9f9b, #eeeae0 48%, #a9aaa5);
+      clip-path: polygon(50% 0, 91% 36%, 100% 100%, 0 100%, 9% 36%);
+    }
+    .shape-capsule::after {
+      position: absolute;
+      top: 18px;
+      left: 14px;
+      width: 9px;
+      height: 7px;
+      border: 1px solid #262b30;
+      border-radius: 50%;
+      background: #1b2530;
+      content: "";
+    }
+    .shape-skirt {
+      width: 39px;
+      height: 34px;
+      border: 3px solid #5b6060;
+      background: repeating-linear-gradient(0deg, #24292c 0 5px, #656968 6px 8px);
+      transform: skewY(-8deg);
+    }
+    .part-copy { min-width: 0; }
+    .part-copy .kind {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--orange);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .part-copy h3 {
+      margin: 0 0 6px;
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    .part-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .open-model {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 9px;
+      color: #f2efe7;
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .open-model::after { color: var(--gold); content: "↗"; font-size: 14px; }
+    footer {
+      padding: 18px 0 26px;
+      border-top: 1px solid var(--line);
+      color: #85897e;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+    footer a { color: #c4a36a; text-decoration: none; }
+    footer a:hover { color: var(--ink); }
+    #viewer-page { display: none; min-height: 100vh; }
+    .viewer-top { display: flex; min-height: 74px; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); }
+    .viewer-intro { padding: 36px 0 20px; }
+    .viewer-intro .eyebrow { margin-bottom: 8px; }
+    .viewer-intro h1 { margin-bottom: 9px; font-size: clamp(36px, 6vw, 58px); }
+    .viewer-intro p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .viewer-shell {
+      position: relative;
+      height: min(68vh, 650px);
+      min-height: 390px;
+      border: 1px solid var(--line);
+      background: radial-gradient(ellipse at 50% 42%, #252920, #10120f 70%);
+    }
+    #model-canvas { display: block; width: 100%; height: 100%; }
+    .viewer-status {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      max-width: calc(100% - 28px);
+      padding: 8px 11px;
+      border: 1px solid #42443c;
+      background: #10120fdd;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .08em;
+    }
+    .viewer-controls { display: flex; flex-wrap: wrap; gap: 9px; padding: 13px 0 36px; }
+    .viewer-controls button {
+      padding: 10px 14px;
+      border: 1px solid #55564b;
+      border-radius: 2px;
+      background: #1b1d18;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .viewer-controls button:hover { border-color: var(--gold); background: #292a21; }
+    .viewer-controls button.primary { border-color: #987945; color: #e9c786; }
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 32px, 540px); }
+      .hero { grid-template-columns: 1fr; gap: 24px; padding: 48px 0 38px; }
+      .hero-aside { max-width: 320px; }
+      .section-heading { align-items: start; flex-direction: column; gap: 12px; }
+      .cards { grid-template-columns: 1fr; }
+      .part-card { min-height: 148px; }
+      .viewer-shell { height: 62vh; min-height: 340px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="catalog-page">
+    <header class="topbar wrap">
+      <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+      <a class="top-link" href="./index.html">← All explorers</a>
+    </header>
+
+    <main>
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">NASA Space Launch System · Block 1B</p>
+          <h1>Explore the<br><em>SLS.</em></h1>
+          <p class="hero-copy">Explore the Block 1B Cargo and Crew configurations. The supplied GLB provides high-detail core, booster, Orion, and launch-abort components; both configurations use the Exploration Upper Stage.</p>
+          <nav class="vehicle-switch" aria-label="SLS configuration">
+            <a data-vehicle-link="cargo" href="?vehicle=cargo">Block 1B Cargo</a>
+            <a data-vehicle-link="crew" href="?vehicle=crew">Block 1B Crew</a>
+          </nav>
+        </div>
+        <aside class="hero-aside">
+          <strong id="vehicle-name">Block 1B Cargo</strong>
+          <span id="vehicle-height">Approx. 103 m vehicle height</span><br>
+          Core stage and boosters<br>
+          Exploration upper stage
+        </aside>
+      </section>
+
+      <section class="catalog wrap" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Photorealistic GLB components · Variant-specific hardware</p>
+            <h2 id="catalog-title">Explore the vehicle</h2>
+          </div>
+          <p>Choose a component to isolate its model. Drag to rotate and use the scroll wheel or pinch to zoom.</p>
+        </div>
+
+        <section class="stage-section" aria-labelledby="shared-title">
+          <h3 class="stage-title" id="shared-title">Shared components <span>Core stage and booster hardware</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?vehicle=cargo&amp;component=core-stage">
+              <span class="card-index">01.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-core"></span></span>
+              <span class="part-copy"><span class="kind">Core Stage · LH2 / LOX</span><h3>Core stage</h3><p>The orange central stage with its liquid-hydrogen and liquid-oxygen tanks.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?vehicle=cargo&amp;component=aft-skirt">
+              <span class="card-index">01.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-skirt"></span></span>
+              <span class="part-copy"><span class="kind">Core Stage · Aft interface</span><h3 id="aft-skirt-title">Aft skirt</h3><p id="aft-skirt-copy">The lower structural skirt at the base of the core stage.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?vehicle=cargo&amp;component=srb">
+              <span class="card-index">01.3</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-booster"></span></span>
+              <span class="part-copy"><span class="kind">Solid rocket booster · Five segments</span><h3>5-segment SRB</h3><p>One booster model, isolated from the launch vehicle.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?vehicle=cargo&amp;component=rs25">
+              <span class="card-index">02.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-engine"></span></span>
+              <span class="part-copy"><span class="kind">Core Stage · Single engine</span><h3>RS-25</h3><p>One RS-25 engine, slightly broader and broader-nozzled than the RL10 family.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?vehicle=cargo&amp;component=eus">
+              <span class="card-index">02.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-upper"></span></span>
+              <span class="part-copy"><span class="kind">Exploration Upper Stage</span><h3>EUS</h3><p>The Block 1B upper stage shared by Cargo and Crew.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" href="?vehicle=cargo&amp;component=rl10">
+              <span class="card-index">03.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-engine"></span></span>
+              <span class="part-copy"><span class="kind">EUS · Single engine</span><h3>RL10C-3</h3><p>One isolated engine from the four-engine EUS cluster.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" id="variant-section" aria-labelledby="variant-title">
+          <h3 class="stage-title" id="variant-title">Cargo configuration <span id="variant-subtitle">Upper stage and payload</span></h3>
+          <div class="cards">
+            <a class="part-card" data-config-only="cargo" href="?vehicle=cargo&amp;component=payload-fairing">
+              <span class="card-index">04.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-fairing"></span></span>
+              <span class="part-copy"><span class="kind">Cargo · Payload protection</span><h3>Payload fairing</h3><p>The fairing that encloses large cargo payloads for launch.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" data-config-only="crew" href="?vehicle=crew&amp;component=orion">
+              <span class="card-index">04.1</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-capsule"></span></span>
+              <span class="part-copy"><span class="kind">Crew · Orion spacecraft</span><h3>Orion</h3><p>The supplied detailed Orion spacecraft model.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" data-config-only="crew" href="?vehicle=crew&amp;component=launch-abort-system">
+              <span class="card-index">04.2</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-booster"></span></span>
+              <span class="part-copy"><span class="kind">Crew · Launch escape hardware</span><h3>Launch Abort System</h3><p>The tower assembly above Orion, shown separately.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+            <a class="part-card" data-config-only="crew" href="?vehicle=crew&amp;component=service-module-fairings">
+              <span class="card-index">04.3</span>
+              <span class="art" aria-hidden="true"><span class="shape shape-fairing"></span></span>
+              <span class="part-copy"><span class="kind">Orion · Service module panels</span><h3>Service module fairings</h3><p>The two fairing panels from the supplied SLS model.</p><span class="open-model">Open 3D model</span></span>
+            </a>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer><div class="wrap">The supplied Block 1 GLB provides detailed shared stages and Crew hardware; its ICPS is omitted here. Block 1B upper-stage geometry remains an educational visualization, not NASA engineering CAD. <a href="https://tianmin435.github.io/s1203roc/sls_block1b_cargo_explorer.html">Cargo reference</a> · <a href="https://tianmin435.github.io/s1203roc/sls_block1b_crew_explorer.html">Crew reference</a>.</div></footer>
+  </div>
+
+  <main id="viewer-page">
+    <div class="wrap">
+      <header class="viewer-top">
+        <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+        <a class="back-link" id="back-link" href="./SLSBlock1.html?vehicle=cargo">← Back to components</a>
+      </header>
+      <section class="viewer-intro">
+        <p class="eyebrow" id="viewer-kicker">SLS Block 1B / Component view</p>
+        <h1 id="viewer-title">Loading component…</h1>
+        <p id="viewer-description">Loading the interactive SLS component model.</p>
+      </section>
+      <div class="viewer-shell">
+        <canvas id="model-canvas" aria-label="Interactive SLS component 3D model"></canvas>
+        <div class="viewer-status" id="viewer-status" role="status">Preparing 3D model…</div>
+      </div>
+      <div class="viewer-controls">
+        <button class="primary" id="isolate-button" type="button">Isolate component</button>
+        <button id="whole-button" type="button">View complete SLS</button>
+        <button id="reset-button" type="button">Reset camera</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const params = new URLSearchParams(location.search);
+    const vehicleKey = params.get('vehicle') === 'crew' ? 'crew' : 'cargo';
+    const vehicleInfo = {
+      cargo: { name: 'Block 1B Cargo', height: 'Approx. 103 m vehicle height' },
+      crew: { name: 'Block 1B Crew', height: 'Approx. 111 m vehicle height' }
+    }[vehicleKey];
+    const componentInfo = {
+      'core-stage': {
+        title: 'Core stage', kicker: 'SLS Block 1B / Shared hardware',
+        description: 'The supplied high-detail liquid-hydrogen and liquid-oxygen core stage, isolated from the boosters and upper stage.'
+      },
+      'aft-skirt': {
+        title: 'Aft skirt', kicker: 'Core stage / Lower structure',
+        description: 'The lower aft interface at the base of the core stage.'
+      },
+      srb: {
+        title: '5-segment solid rocket booster', kicker: 'Shared hardware / Single booster',
+        description: 'One five-segment solid rocket booster, shown separately from the other vehicle components.'
+      },
+      eus: {
+        title: 'Exploration Upper Stage', kicker: 'Block 1B / Shared upper stage',
+        description: 'Textured orange tank, exposed truss, red propellant plumbing, insulated lower barrel, and RL10C-3 upper-stage engines.'
+      },
+      rs25: {
+        title: 'RS-25 engine', kicker: 'Core stage / Single engine',
+        description: 'One RS-25 engine model, isolated from the core-stage cluster with a slightly broader nozzle and chamber profile.'
+      },
+      rl10: {
+        title: 'RL10C-3 engine', kicker: 'EUS / Single engine',
+        description: 'One RL10C-3 engine model, isolated from the four-engine EUS cluster.'
+      },
+      'payload-fairing': {
+        title: 'Payload fairing', kicker: 'Block 1B Cargo / Payload protection',
+        description: 'The cargo configuration fairing, isolated from the shared SLS stages.'
+      },
+      orion: {
+        title: 'Orion spacecraft', kicker: 'Block 1B Crew / Crew vehicle',
+        description: 'The supplied detailed Orion spacecraft model.'
+      },
+      'launch-abort-system': {
+        title: 'Launch Abort System', kicker: 'Block 1B Crew / Escape hardware',
+        description: 'The tower structure above Orion, isolated as a crew-configuration component.'
+      },
+      'service-module-fairings': {
+        title: 'Orion service module fairings', kicker: 'Block 1B Crew / Orion hardware',
+        description: 'The two photorealistic service-module fairing panels from the supplied SLS model.'
+      },
+      complete: {
+        title: 'Complete SLS', kicker: 'Interactive vehicle view',
+        description: 'The block 1B crew and cargo vehicle arrangements shown as a full-stack visualization.'
+      }
+    };
+    const sharedComponents = ['core-stage', 'aft-skirt', 'srb', 'rs25', 'eus', 'rl10'];
+    const variantComponents = vehicleKey === 'crew'
+      ? ['orion', 'launch-abort-system', 'service-module-fairings']
+      : ['payload-fairing'];
+    if (vehicleKey === 'crew') {
+      componentInfo['core-stage'].kicker = 'Block 1B Crew / Shared hardware';
+      componentInfo['aft-skirt'].title = 'Aft skirt interface';
+      componentInfo['aft-skirt'].kicker = 'Block 1B Crew / Aft interface';
+      componentInfo['aft-skirt'].description = 'The photorealistic lower interface ring from the supplied model.';
+      componentInfo.srb.kicker = 'Block 1B Crew / Single booster';
+      componentInfo.srb.description = 'One high-detail five-segment solid rocket booster from the supplied model.';
+    }
+    const selectedKey = params.get('component');
+    const selected = componentInfo[selectedKey];
+    const validSelection = selected && (selectedKey === 'complete' || sharedComponents.includes(selectedKey) || variantComponents.includes(selectedKey));
+
+    document.querySelectorAll('[data-vehicle-link]').forEach(link => {
+      const linkVehicle = link.dataset.vehicleLink;
+      link.href = `?vehicle=${linkVehicle}`;
+      if (linkVehicle === vehicleKey) link.setAttribute('aria-current', 'page');
+    });
+    document.querySelector('#vehicle-name').textContent = vehicleInfo.name;
+    document.querySelector('#vehicle-height').textContent = vehicleInfo.height;
+    document.querySelector('#variant-title').firstChild.textContent = vehicleKey === 'crew' ? 'Crew configuration ' : 'Cargo configuration ';
+    document.querySelector('#variant-subtitle').textContent = vehicleKey === 'crew'
+      ? 'Orion · Launch Abort System'
+      : 'Payload protection';
+    document.querySelector('#aft-skirt-title').textContent = vehicleKey === 'crew' ? 'Aft skirt interface' : 'Aft skirt';
+    document.querySelector('#aft-skirt-copy').textContent = vehicleKey === 'crew'
+      ? 'The photorealistic lower interface ring from the supplied model.'
+      : 'The lower structural skirt at the base of the core stage.';
+    document.title = `SLS ${vehicleInfo.name} | Component Atlas`;
+    document.querySelectorAll('.part-card').forEach(card => {
+      const link = new URL(card.href);
+      link.searchParams.set('vehicle', vehicleKey);
+      card.href = link.href;
+    });
+    document.querySelectorAll('[data-config-only]').forEach(card => {
+      card.hidden = card.dataset.configOnly !== vehicleKey;
+    });
+
+    if (validSelection) {
+      document.querySelector('#catalog-page').hidden = true;
+      document.querySelector('#viewer-page').style.display = 'block';
+      document.querySelector('#back-link').href = `./SLSBlock1.html?vehicle=${vehicleKey}`;
+      document.title = `${selected.title} | SLS ${vehicleInfo.name} Atlas`;
+      document.querySelector('#viewer-title').textContent = selected.title;
+      document.querySelector('#model-canvas').setAttribute('aria-label', `Interactive SLS ${vehicleInfo.name} 3D model`);
+      document.querySelector('#viewer-kicker').textContent = selected.kicker;
+      document.querySelector('#viewer-description').textContent = selected.description;
+      startViewer(selectedKey);
+    }
+
+    function startViewer(componentKey) {
+      const canvas = document.querySelector('#model-canvas');
+      const status = document.querySelector('#viewer-status');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x10120f);
+      const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 1200);
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      } catch (error) {
+        console.error('Unable to initialize the SLS 3D viewer:', error);
+        status.textContent = 'Unable to start 3D graphics in this browser.';
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const environmentGenerator = new THREE.PMREMGenerator(renderer);
+      scene.environment = environmentGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.7;
+      environmentGenerator.dispose();
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minDistance = 1;
+      controls.maxDistance = 600;
+      scene.add(new THREE.HemisphereLight(0xdce7f0, 0x383125, 2));
+      const keyLight = new THREE.DirectionalLight(0xffe6bd, 3.1);
+      keyLight.position.set(65, 90, 75);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(1024, 1024);
+      keyLight.shadow.camera.near = 2;
+      keyLight.shadow.camera.far = 260;
+      keyLight.shadow.camera.left = -90;
+      keyLight.shadow.camera.right = 90;
+      keyLight.shadow.camera.top = 130;
+      keyLight.shadow.camera.bottom = -30;
+      scene.add(keyLight);
+      const fillLight = new THREE.DirectionalLight(0x8db7e2, 1.5);
+      fillLight.position.set(-80, 35, -70);
+      scene.add(fillLight);
+
+      function makeWovenTexture(background, strand) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const context = canvas.getContext('2d');
+        context.fillStyle = background;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        for (let y = 0; y < canvas.height; y += 3) {
+          context.fillStyle = y % 6 === 0 ? 'rgba(255,255,255,0.07)' : 'rgba(20,15,10,0.035)';
+          context.fillRect(0, y, canvas.width, 1);
+        }
+        context.fillStyle = strand;
+        for (let index = 0; index < 7200; index++) {
+          const x = (index * 73 + index % 17 * 11) % canvas.width;
+          const y = (index * 151 + Math.floor(index / 7) * 19) % canvas.height;
+          context.globalAlpha = index % 4 === 0 ? 0.18 : 0.08;
+          context.fillRect(x, y, index % 5 === 0 ? 3 : 1, 1);
+        }
+        context.globalAlpha = 1;
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(3, 2);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      }
+
+      const eusTankTexture = makeWovenTexture('#984811', '#e3a04b');
+      const eusInsulationTexture = makeWovenTexture('#c9c8c0', '#f4f2e9');
+      const materials = {
+        core: new THREE.MeshStandardMaterial({ color: 0xe8752d, roughness: 0.78, metalness: 0.08 }),
+        coreShade: new THREE.MeshStandardMaterial({ color: 0xc45c26, roughness: 0.82 }),
+        white: new THREE.MeshStandardMaterial({ color: 0xe8e7df, roughness: 0.55, metalness: 0.12 }),
+        whiteShade: new THREE.MeshStandardMaterial({ color: 0xb9bbb8, roughness: 0.6, metalness: 0.2 }),
+        eusTank: new THREE.MeshStandardMaterial({
+          map: eusTankTexture,
+          bumpMap: eusTankTexture,
+          bumpScale: 0.045,
+          roughness: 0.9
+        }),
+        eusInsulation: new THREE.MeshStandardMaterial({
+          map: eusInsulationTexture,
+          bumpMap: eusInsulationTexture,
+          bumpScale: 0.035,
+          roughness: 0.92
+        }),
+        steel: new THREE.MeshStandardMaterial({ color: 0x7d8587, roughness: 0.38, metalness: 0.72 }),
+        engine: new THREE.MeshStandardMaterial({ color: 0x9ca3a4, roughness: 0.3, metalness: 0.78 }),
+        engineDark: new THREE.MeshStandardMaterial({ color: 0x262b2e, roughness: 0.42, metalness: 0.62 }),
+        nozzle: new THREE.MeshStandardMaterial({ color: 0x4d4640, roughness: 0.58, metalness: 0.65 }),
+        gold: new THREE.MeshStandardMaterial({ color: 0xc9984d, roughness: 0.32, metalness: 0.72 }),
+        red: new THREE.MeshStandardMaterial({ color: 0xad3f32, roughness: 0.55, metalness: 0.18 }),
+        black: new THREE.MeshStandardMaterial({ color: 0x191d20, roughness: 0.56, metalness: 0.42 }),
+        panel: new THREE.MeshStandardMaterial({ color: 0x283b4c, roughness: 0.37, metalness: 0.45 })
+      };
+
+      const vehicle = new THREE.Group();
+      scene.add(vehicle);
+      const parts = {};
+      const detailedVehicle = new THREE.Group();
+      detailedVehicle.name = 'Supplied SLS GLB components';
+      detailedVehicle.visible = false;
+      scene.add(detailedVehicle);
+      const detailedParts = {};
+      let detailedComplete = null;
+      function part(key, build) {
+        const group = new THREE.Group();
+        group.name = key;
+        group.visible = false;
+        vehicle.add(group);
+        parts[key] = group;
+        build(group);
+      }
+      function cloneAtWorld(node) {
+        node.updateWorldMatrix(true, false);
+        const clone = node.clone(true);
+        clone.position.set(0, 0, 0);
+        clone.quaternion.identity();
+        clone.scale.set(1, 1, 1);
+        clone.matrix.identity();
+        clone.matrixAutoUpdate = true;
+        clone.applyMatrix4(node.matrixWorld);
+        return clone;
+      }
+      function addDetailedPart(key, build) {
+        const group = new THREE.Group();
+        group.name = key;
+        group.visible = false;
+        build(group);
+        detailedVehicle.add(group);
+        detailedParts[key] = group;
+        return group;
+      }
+      function addMesh(parent, geometry, material, position = [0, 0, 0], rotation = [0, 0, 0]) {
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(position[0], position[1], position[2]);
+        mesh.rotation.set(rotation[0], rotation[1], rotation[2]);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+      function cylinder(parent, radiusTop, radiusBottom, height, y, material, segments = 48, openEnded = false) {
+        return addMesh(parent, new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments, 1, openEnded), material, [0, y, 0]);
+      }
+      function ring(parent, radius, y, tube, material) {
+        return addMesh(parent, new THREE.TorusGeometry(radius, tube, 10, 64), material, [0, y, 0], [Math.PI / 2, 0, 0]);
+      }
+      function box(parent, width, height, depth, position, material, rotationY = 0) {
+        return addMesh(parent, new THREE.BoxGeometry(width, height, depth), material, position, [0, rotationY, 0]);
+      }
+      function rod(parent, start, end, radius, material) {
+        const a = new THREE.Vector3(start[0], start[1], start[2]);
+        const b = new THREE.Vector3(end[0], end[1], end[2]);
+        const direction = b.clone().sub(a);
+        const mesh = addMesh(parent, new THREE.CylinderGeometry(radius * 0.8, radius, direction.length(), 10), material);
+        mesh.position.copy(a.add(b).multiplyScalar(0.5));
+        mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+        return mesh;
+      }
+      function lathe(parent, profile, material, segments = 48) {
+        return addMesh(parent, new THREE.LatheGeometry(profile.map(point => new THREE.Vector2(point[0], point[1])), segments), material);
+      }
+
+      function buildCoreStage(group) {
+        cylinder(group, 4.18, 4.18, 52, 34, materials.core, 72);
+        addMesh(group, new THREE.SphereGeometry(4.18, 64, 24, 0, Math.PI * 2, 0, Math.PI / 2), materials.core, [0, 60, 0]);
+        addMesh(group, new THREE.SphereGeometry(4.18, 64, 24, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), materials.coreShade, [0, 8, 0]);
+        ring(group, 4.16, 8.4, 0.08, materials.coreShade);
+        ring(group, 4.18, 60.2, 0.08, materials.whiteShade);
+        ring(group, 4.18, 34, 0.035, materials.coreShade);
+        for (let index = 0; index < 8; index++) {
+          const angle = index * Math.PI / 4;
+          const x = Math.cos(angle) * 4.17;
+          const z = Math.sin(angle) * 4.17;
+          rod(group, [x, 12, z], [x, 57, z], 0.024, materials.coreShade);
+        }
+        for (let index = 0; index < 12; index++) {
+          const angle = index * Math.PI / 6;
+          const x = Math.cos(angle) * 4.2;
+          const z = Math.sin(angle) * 4.2;
+          box(group, 0.12, 0.42, 0.12, [x, 63.5, z], materials.whiteShade, -angle);
+        }
+      }
+      function buildAftSkirt(group) {
+        cylinder(group, 4.3, 4.15, 5.4, 2.7, materials.engineDark, 64);
+        ring(group, 4.29, 0.45, 0.12, materials.steel);
+        ring(group, 4.24, 5.1, 0.11, materials.gold);
+        for (let index = 0; index < 16; index++) {
+          const angle = index * Math.PI / 8;
+          const x = Math.cos(angle) * 4.24;
+          const z = Math.sin(angle) * 4.24;
+          box(group, 0.28, 1.1, 0.14, [x, 2.8, z], index % 4 === 0 ? materials.gold : materials.steel, -angle);
+        }
+      }
+      function buildBooster(parent, x, y, z, scale = 1) {
+        const booster = new THREE.Group();
+        booster.position.set(x, y, z);
+        booster.scale.setScalar(scale);
+        parent.add(booster);
+        cylinder(booster, 1.75, 1.75, 44, 27, materials.white, 40);
+        addMesh(booster, new THREE.ConeGeometry(1.75, 7, 40), materials.white, [0, 52.5, 0]);
+        cylinder(booster, 1.86, 1.75, 4, 4.2, materials.engineDark, 40);
+        cylinder(booster, 1.18, 1.55, 3.6, 1.3, materials.nozzle, 40);
+        ring(booster, 1.78, 5.6, 0.09, materials.steel);
+        for (const yBand of [14, 23, 32, 41, 49]) ring(booster, 1.76, yBand, 0.035, materials.whiteShade);
+        ring(booster, 1.45, 1.4, 0.07, materials.engineDark);
+      }
+      function buildEngine(parent, engineType = 'rl10', x = 0, y = 0, z = 0, scale = 1) {
+        const isRs25 = engineType === 'rs25';
+        const engine = new THREE.Group();
+        engine.position.set(x, y, z);
+        engine.scale.setScalar(scale);
+        parent.add(engine);
+        const exitRadius = isRs25 ? 1.25 : 0.88;
+        const throat = isRs25 ? 0.34 : 0.18;
+        const bellHeight = isRs25 ? 3.3 : 2.8;
+        const profile = [
+          [exitRadius, 0], [exitRadius * 0.96, 0.1], [exitRadius * 0.82, 0.42],
+          [exitRadius * 0.66, bellHeight * 0.36], [exitRadius * 0.5, bellHeight * 0.66],
+          [throat * 1.32, bellHeight * 0.92], [throat, bellHeight],
+          [isRs25 ? 0.54 : 0.31, bellHeight + 0.22], [isRs25 ? 0.64 : 0.36, bellHeight + 0.62],
+          [isRs25 ? 0.78 : 0.43, bellHeight + 0.92], [isRs25 ? 0.58 : 0.3, bellHeight + 1.18]
+        ];
+        lathe(engine, profile, materials.engine, 48);
+        lathe(engine, profile.slice(0, 7).map(([radius, height]) => [Math.max(radius - (isRs25 ? 0.045 : 0.035), 0.06), height + 0.02]).reverse(), materials.nozzle, 40);
+        ring(engine, exitRadius * 0.97, 0.07, isRs25 ? 0.065 : 0.055, materials.nozzle);
+        ring(engine, throat * 1.3, bellHeight * 0.9, 0.035, materials.gold);
+        for (let index = 2; index < 12; index++) {
+          const progress = index / 12;
+          const radius = exitRadius - (exitRadius - throat) * Math.pow(progress, 0.78);
+          ring(engine, radius, bellHeight * progress, isRs25 ? 0.02 : 0.018, index % 3 === 0 ? materials.nozzle : materials.engine);
+        }
+        cylinder(engine, isRs25 ? 0.62 : 0.39, isRs25 ? 0.68 : 0.43, isRs25 ? 0.28 : 0.22, bellHeight + 0.84, materials.engineDark, 24);
+        cylinder(engine, isRs25 ? 0.54 : 0.32, isRs25 ? 0.62 : 0.4, isRs25 ? 0.72 : 0.62, bellHeight + 1.24, materials.engine, 28);
+        ring(engine, isRs25 ? 0.62 : 0.4, bellHeight + 1.57, 0.045, materials.gold);
+        for (let index = 0; index < 4; index++) {
+          const angle = index * Math.PI / 2;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          rod(engine, [cos * (isRs25 ? 0.38 : 0.32), bellHeight + 1.25, sin * (isRs25 ? 0.38 : 0.32)], [cos * (isRs25 ? 0.7 : 0.62), bellHeight + 0.25, sin * (isRs25 ? 0.7 : 0.62)], isRs25 ? 0.05 : 0.035, materials.steel);
+        }
+      }
+      function buildEus(group) {
+        const tankBottom = 73.7;
+        const tankTop = 80.15;
+        cylinder(group, 3.8, 3.8, tankTop - tankBottom, (tankTop + tankBottom) / 2, materials.eusTank, 72);
+        const crown = addMesh(
+          group,
+          new THREE.SphereGeometry(3.8, 72, 20, 0, Math.PI * 2, 0, Math.PI / 2),
+          materials.eusTank,
+          [0, tankTop, 0]
+        );
+        crown.scale.y = 0.15;
+        ring(group, 3.82, 75.25, 0.095, materials.gold);
+        ring(group, 3.82, 78.05, 0.095, materials.gold);
+        ring(group, 3.83, tankBottom, 0.12, materials.black);
+        ring(group, 3.8, tankTop, 0.07, materials.steel);
+        box(group, 0.72, 0.72, 0.09, [0.55, 79.05, 3.77], materials.gold);
+        box(group, 0.16, 0.38, 0.08, [-2.05, 78.95, 3.2], materials.steel);
+        box(group, 0.08, 0.24, 0.06, [-2.05, 78.95, 3.25], materials.white);
+        for (let index = 0; index < 8; index++) {
+          const angle = index * Math.PI / 4;
+          const x = Math.cos(angle) * 0.22;
+          const z = Math.sin(angle) * 0.22;
+          rod(group, [x, tankTop + 0.08, z], [x * 1.5, tankTop + 0.43, z * 1.5], 0.035, materials.steel);
+        }
+
+        const upperTrussY = 73.45;
+        const lowerTrussY = 70.4;
+        const upperTrussRadius = 3.55;
+        const lowerTrussRadius = 2.62;
+        ring(group, upperTrussRadius, upperTrussY, 0.12, materials.black);
+        ring(group, lowerTrussRadius, lowerTrussY, 0.12, materials.black);
+        for (let index = 0; index < 12; index++) {
+          const angleA = index * Math.PI / 6;
+          const angleB = (index + 1) * Math.PI / 6;
+          const topA = [Math.cos(angleA) * upperTrussRadius, upperTrussY, Math.sin(angleA) * upperTrussRadius];
+          const topB = [Math.cos(angleB) * upperTrussRadius, upperTrussY, Math.sin(angleB) * upperTrussRadius];
+          const bottomA = [Math.cos(angleA) * lowerTrussRadius, lowerTrussY, Math.sin(angleA) * lowerTrussRadius];
+          const bottomB = [Math.cos(angleB) * lowerTrussRadius, lowerTrussY, Math.sin(angleB) * lowerTrussRadius];
+          rod(group, topA, bottomB, 0.095, materials.black);
+          rod(group, topB, bottomA, 0.095, materials.black);
+          rod(group, topA, bottomA, 0.065, materials.black);
+        }
+        ring(group, 3.02, 72.65, 0.16, materials.red);
+        ring(group, 2.88, 71.65, 0.12, materials.red);
+        ring(group, 2.72, 70.95, 0.075, materials.steel);
+        for (let index = 0; index < 8; index++) {
+          const angle = index * Math.PI / 4;
+          const x = Math.cos(angle);
+          const z = Math.sin(angle);
+          rod(group, [x * 3.12, 72.66, z * 3.12], [x * 2.82, 71.66, z * 2.82], 0.055, materials.whiteShade);
+          rod(group, [x * 2.73, 71.05, z * 2.73], [x * 2.58, 70.35, z * 2.58], 0.035, materials.gold);
+        }
+
+        cylinder(group, 2.62, 2.62, 4.1, 68.55, materials.eusInsulation, 64);
+        ring(group, 2.65, 66.5, 0.12, materials.steel);
+        ring(group, 2.64, 70.6, 0.11, materials.whiteShade);
+        ring(group, 2.63, 67.45, 0.035, materials.whiteShade);
+        ring(group, 2.63, 68.55, 0.035, materials.whiteShade);
+        ring(group, 2.63, 69.65, 0.035, materials.whiteShade);
+        cylinder(group, 2.76, 2.62, 0.3, 66.35, materials.whiteShade, 64);
+        for (let index = 0; index < 10; index++) {
+          const angle = index * Math.PI / 5;
+          const x = Math.cos(angle) * 2.65;
+          const z = Math.sin(angle) * 2.65;
+          box(group, 0.38, 0.42, 0.22, [x, 66.12, z], index % 2 ? materials.whiteShade : materials.gold, -angle);
+        }
+
+        const engineOffsetY = vehicleKey === 'crew' ? 65.4 : 60.4;
+        for (const x of [-1, 1]) {
+          for (const z of [-1, 1]) {
+            buildEngine(group, 'rl10', x * 1.08, engineOffsetY, z * 1.08, 0.78);
+            rod(
+              group,
+              [x * 1.08, engineOffsetY + 5.8, z * 1.08],
+              [x * 1.55, engineOffsetY + 4.8, z * 1.55],
+              0.055,
+              materials.steel
+            );
+          }
+        }
+      }
+      function buildFairing(group) {
+        cylinder(group, 4.05, 4.05, 12.5, 88.75, materials.white, 64, true);
+        addMesh(group, new THREE.ConeGeometry(4.05, 8, 64), materials.white, [0, 99, 0]);
+        ring(group, 4.05, 82.6, 0.1, materials.steel);
+        ring(group, 4.06, 94.8, 0.035, materials.whiteShade);
+        for (const angle of [0, Math.PI / 2, Math.PI, Math.PI * 1.5]) {
+          const x = Math.sin(angle) * 4.05;
+          const z = Math.cos(angle) * 4.05;
+          rod(group, [x, 83, z], [x * 0.04, 102.5, z * 0.04], 0.025, materials.whiteShade);
+        }
+      }
+      function buildOrion(group) {
+        cylinder(group, 2.6, 2.85, 5.2, 85.2, materials.whiteShade, 48);
+        ring(group, 2.65, 82.6, 0.12, materials.steel);
+        ring(group, 2.62, 87.6, 0.12, materials.gold);
+        for (const side of [-1, 1]) {
+          const panel = box(group, 2.7, 0.12, 1.1, [side * 4.2, 84.9, 0], materials.panel);
+          panel.rotation.z = side * 0.05;
+          for (let index = 0; index < 4; index++) {
+            const x = side * (3.15 + index * 0.68);
+            box(group, 0.035, 0.035, 1.08, [x, 84.99, 0], materials.gold);
+          }
+        }
+        const capsuleProfile = [
+          [2.65, 0], [2.78, 0.4], [2.55, 1.5], [2.15, 2.25],
+          [1.55, 3.0], [0.9, 3.7], [0.28, 4.2], [0.04, 4.35]
+        ];
+        lathe(group, capsuleProfile, materials.white, 56).position.y = 87.7;
+        cylinder(group, 2.62, 2.62, 0.3, 87.8, materials.engineDark, 56);
+        for (const x of [-0.88, 0, 0.88]) {
+          const window = addMesh(group, new THREE.CylinderGeometry(0.24, 0.24, 0.08, 24), materials.black, [x, 90.5, 2.0], [Math.PI / 2, 0, 0]);
+          window.scale.x = 1.2;
+        }
+      }
+      function buildLaunchAbort(group) {
+        addMesh(group, new THREE.ConeGeometry(0.72, 3.2, 32), materials.white, [0, 109.2, 0]);
+        for (const x of [-0.72, 0.72]) {
+          rod(group, [x, 92, 0], [x * 0.68, 107.7, 0], 0.12, materials.whiteShade);
+          cylinder(group, 0.28, 0.38, 5.8, 95.1, materials.red, 24);
+          rod(group, [x, 97.9, 0], [0, 97.9, 0], 0.09, materials.white);
+          rod(group, [x * 0.86, 101.5, 0], [-x * 0.86, 101.5, 0], 0.075, materials.whiteShade);
+          rod(group, [x * 0.8, 105, 0], [-x * 0.8, 105, 0], 0.075, materials.whiteShade);
+        }
+      }
+
+      part('core-stage', buildCoreStage);
+      part('aft-skirt', buildAftSkirt);
+      part('srb-single', group => buildBooster(group, 0, 0, 0));
+      part('srb-pair', group => {
+        buildBooster(group, -6.05, 0, 0);
+        buildBooster(group, 6.05, 0, 0);
+      });
+      part('eus', buildEus);
+      if (vehicleKey === 'crew') parts.eus.position.y = -5;
+      part('rs25-single', group => buildEngine(group, 'rs25'));
+      part('rl10-single', group => buildEngine(group, 'rl10'));
+      part('payload-fairing', buildFairing);
+      part('orion', buildOrion);
+      part('launch-abort-system', buildLaunchAbort);
+
+      function buildDetailedParts(gltf) {
+        const model = gltf.scene;
+        model.updateMatrixWorld(true);
+        const requiredNames = [
+          'First_Stage_6', 'Object_12',
+          'ICPS_9',
+          'Launch_Abort_Tower_10', 'Fairing001_11', 'Fairing_12',
+          'SRB_Booster_13', 'SRB_Booster001_14'
+        ];
+        const missing = requiredNames.filter(name => !model.getObjectByName(name));
+        if (missing.length) {
+          console.error('The supplied SLS GLB is missing expected component nodes:', missing);
+          status.textContent = `The supplied SLS model is missing components: ${missing.join(', ')}`;
+          return false;
+        }
+        model.traverse(node => {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+
+        const getNode = name => model.getObjectByName(name);
+        const coreStage = cloneAtWorld(getNode('First_Stage_6'));
+        coreStage.children
+          .filter(child => child.name === 'Object_12')
+          .forEach(child => coreStage.remove(child));
+        addDetailedPart('core-stage', group => group.add(coreStage));
+        addDetailedPart('aft-skirt', group => group.add(cloneAtWorld(getNode('Object_12'))));
+        addDetailedPart('srb-single', group => group.add(cloneAtWorld(getNode('SRB_Booster_13'))));
+        addDetailedPart('srb-pair', group => {
+          group.add(cloneAtWorld(getNode('SRB_Booster_13')));
+          group.add(cloneAtWorld(getNode('SRB_Booster001_14')));
+        });
+
+        getNode('ICPS_9').visible = false;
+        addDetailedPart('launch-abort-system', group => group.add(cloneAtWorld(getNode('Launch_Abort_Tower_10'))));
+        addDetailedPart('service-module-fairings', group => {
+          group.add(cloneAtWorld(getNode('Fairing001_11')));
+          group.add(cloneAtWorld(getNode('Fairing_12')));
+        });
+
+        model.visible = false;
+        detailedVehicle.add(model);
+        detailedComplete = model;
+        return true;
+      }
+
+      function loadDetailedOrion(onLoaded) {
+        const loader = new GLTFLoader();
+        loader.load('./assets/orion_spacecraft.glb', gltf => {
+          const spacecraft = gltf.scene;
+          spacecraft.updateMatrixWorld(true);
+          const bounds = new THREE.Box3().setFromObject(spacecraft);
+          const size = bounds.getSize(new THREE.Vector3());
+          if (bounds.isEmpty() || size.y <= 0) {
+            const error = new Error('The Orion GLB has no usable vertical bounds.');
+            console.error('Unable to prepare the supplied Orion model:', error);
+            status.textContent = 'The supplied Orion model contains no usable geometry.';
+            viewerButtons.forEach(button => { button.disabled = false; });
+            return;
+          }
+          const center = bounds.getCenter(new THREE.Vector3());
+          const scale = 7 / size.y;
+          spacecraft.scale.setScalar(scale);
+          spacecraft.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+          spacecraft.traverse(node => {
+            if (node.isMesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+            }
+          });
+          addDetailedPart('orion', group => group.add(spacecraft));
+          onLoaded();
+        }, event => {
+          if (event.total) status.textContent = `Loading Orion spacecraft · ${Math.round(event.loaded / event.total * 100)}%`;
+        }, error => {
+          console.error('Unable to load the supplied Orion GLB:', error);
+          status.textContent = 'Unable to load assets/orion_spacecraft.glb.';
+          viewerButtons.forEach(button => { button.disabled = false; });
+        });
+      }
+
+      const completePartKeys = ['core-stage', 'aft-skirt', 'srb-pair', 'eus'];
+      const isolatePartKey = {
+        'core-stage': 'core-stage',
+        'aft-skirt': 'aft-skirt',
+        srb: 'srb-single',
+        rs25: 'rs25-single',
+        eus: 'eus',
+        rl10: 'rl10-single',
+        'payload-fairing': 'payload-fairing',
+        orion: 'orion',
+        'launch-abort-system': 'launch-abort-system',
+        'service-module-fairings': 'service-module-fairings'
+      };
+
+      function visibleBounds(root) {
+        const bounds = new THREE.Box3();
+        root.updateMatrixWorld(true);
+        function visit(node, parentVisible) {
+          const visible = parentVisible && node.visible;
+          if (!visible) return;
+          if (node.isMesh && node.geometry) {
+            if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+            if (node.geometry.boundingBox) bounds.expandByObject(node);
+          }
+          node.children.forEach(child => visit(child, visible));
+        }
+        visit(root, true);
+        return bounds;
+      }
+      function focusOn(bounds) {
+        if (bounds.isEmpty()) {
+          status.textContent = 'No visible geometry is available for this view.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const distance = Math.max(maxSize * 1.8, 7);
+        camera.position.set(center.x + distance * 0.4, center.y + distance * 0.24, center.z + distance * 0.89);
+        camera.near = Math.max(distance / 1000, 0.01);
+        camera.far = Math.max(distance * 30, 200);
+        camera.updateProjectionMatrix();
+        controls.target.copy(center);
+        controls.minDistance = Math.max(maxSize * 0.16, 0.6);
+        controls.maxDistance = Math.max(maxSize * 8, 30);
+        controls.update();
+      }
+      function currentModelBounds() {
+        return visibleBounds(vehicle).union(visibleBounds(detailedVehicle));
+      }
+      function hideAllParts() {
+        Object.values(parts).forEach(group => { group.visible = false; });
+        Object.values(detailedParts).forEach(group => { group.visible = false; });
+        if (detailedComplete) detailedComplete.visible = false;
+      }
+      function showCompleteVehicle() {
+        hideAllParts();
+        vehicle.visible = true;
+        detailedVehicle.visible = true;
+        if (vehicleKey === 'cargo') {
+          completePartKeys.forEach(key => {
+            const group = detailedParts[key] || parts[key];
+            group.visible = true;
+          });
+          parts['payload-fairing'].visible = true;
+        } else {
+          detailedComplete.visible = true;
+          parts.eus.visible = true;
+        }
+        focusOn(currentModelBounds());
+        document.querySelector('#viewer-title').textContent = `Complete SLS ${vehicleInfo.name}`;
+        document.querySelector('#viewer-kicker').textContent = `${vehicleInfo.name} / Complete vehicle`;
+        document.querySelector('#viewer-description').textContent = componentInfo.complete.description;
+        document.title = `Complete SLS ${vehicleInfo.name} | Component Atlas`;
+        status.textContent = `Complete SLS ${vehicleInfo.name} · drag to rotate`;
+      }
+      function showSelection() {
+        if (componentKey === 'complete') {
+          showCompleteVehicle();
+          return;
+        }
+        hideAllParts();
+        detailedVehicle.visible = true;
+        const selectedPartKey = isolatePartKey[componentKey];
+        const selectedPart = detailedParts[selectedPartKey] || parts[selectedPartKey];
+        if (!selectedPart) {
+          status.textContent = `No model is available for ${componentInfo[componentKey].title}.`;
+          return;
+        }
+        vehicle.visible = vehicleKey !== 'crew' || !detailedParts[selectedPartKey];
+        selectedPart.visible = true;
+        focusOn(currentModelBounds());
+        document.querySelector('#viewer-title').textContent = componentInfo[componentKey].title;
+        document.querySelector('#viewer-kicker').textContent = componentInfo[componentKey].kicker;
+        document.querySelector('#viewer-description').textContent = componentInfo[componentKey].description;
+        document.title = `${componentInfo[componentKey].title} | SLS ${vehicleInfo.name} Atlas`;
+        status.textContent = `${componentInfo[componentKey].title} isolated · drag to rotate`;
+      }
+      function resize() {
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        camera.aspect = bounds.width / bounds.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(bounds.width, bounds.height, false);
+      }
+
+      document.querySelector('#isolate-button').addEventListener('click', showSelection);
+      document.querySelector('#whole-button').addEventListener('click', showCompleteVehicle);
+      document.querySelector('#reset-button').addEventListener('click', () => focusOn(currentModelBounds()));
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+
+      function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      render();
+
+      const viewerButtons = Array.from(document.querySelectorAll('.viewer-controls button'));
+      viewerButtons.forEach(button => { button.disabled = true; });
+      const modelLoader = new GLTFLoader();
+      modelLoader.load('./assets/sls_block_1_crew_v4.glb', gltf => {
+        if (!buildDetailedParts(gltf)) {
+          if (vehicleKey === 'cargo') {
+            vehicle.visible = true;
+            detailedVehicle.visible = false;
+            showSelection();
+            status.textContent = 'The detailed shared model is incomplete; showing the Cargo visualization.';
+            viewerButtons.forEach(button => { button.disabled = false; });
+          }
+          return;
+        }
+        vehicle.visible = vehicleKey !== 'crew';
+        detailedVehicle.visible = true;
+        const ready = () => {
+          viewerButtons.forEach(button => { button.disabled = false; });
+          showSelection();
+        };
+        if (vehicleKey === 'crew' && componentKey === 'orion') {
+          loadDetailedOrion(ready);
+        } else {
+          ready();
+        }
+      }, event => {
+        if (event.total) status.textContent = `Loading supplied SLS model · ${Math.round(event.loaded / event.total * 100)}%`;
+        else status.textContent = 'Loading supplied SLS model…';
+      }, error => {
+        console.error('Unable to load the supplied SLS GLB:', error);
+        if (vehicleKey === 'cargo') {
+          vehicle.visible = true;
+          detailedVehicle.visible = false;
+          showSelection();
+          status.textContent = 'Unable to load the detailed shared model; showing the Cargo visualization.';
+          viewerButtons.forEach(button => { button.disabled = false; });
+        } else {
+          status.textContent = 'Unable to load assets/sls_block_1_crew_v4.glb.';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

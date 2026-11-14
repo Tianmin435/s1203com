@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Space Shuttle — Parts Atlas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f2efe7;
+      --muted: #a7aaa0;
+      --gold: #d7ad66;
+      --line: #383b33;
+      --bg: #10120f;
+      --serif: Georgia, "Times New Roman", serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+    body { min-width: 320px; margin: 0; background: var(--bg); }
+    a { color: inherit; }
+    button { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar, .viewer-top {
+      display: flex;
+      min-height: 74px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .17em;
+      text-decoration: none;
+    }
+    .brand span { color: var(--gold); }
+    .top-link, .back-link {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+    }
+    .top-link:hover, .back-link:hover { color: var(--gold); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      align-items: end;
+      gap: 28px;
+      padding: 82px 0 66px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow, .section-kicker {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-family: var(--serif);
+      font-size: clamp(44px, 8vw, 88px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .96;
+    }
+    h1 em { color: var(--gold); font-weight: 400; }
+    .hero-copy {
+      max-width: 560px;
+      margin-bottom: 0;
+      color: #b7b9b1;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .hero-aside {
+      padding: 0 0 4px 18px;
+      border-left: 1px solid var(--gold);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .hero-aside strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .catalog { padding: 62px 0 80px; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .section-heading h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .section-heading > p {
+      max-width: 400px;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .stage-section { padding-top: 30px; }
+    .stage-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 0 0 15px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .stage-title span { color: #797d73; font-weight: 500; letter-spacing: .04em; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .part-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr);
+      align-items: center;
+      gap: 20px;
+      min-height: 174px;
+      padding: 19px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1c1e19, #151713);
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+    .part-card:hover, .part-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #9c7d4d;
+      background: linear-gradient(135deg, #24251e, #191b17);
+    }
+    .card-index {
+      position: absolute;
+      top: 13px;
+      right: 15px;
+      color: #62665c;
+      font-size: 10px;
+      letter-spacing: .12em;
+    }
+    .art {
+      display: grid;
+      width: 82px;
+      height: 118px;
+      place-items: center;
+      overflow: hidden;
+      border-right: 1px solid #34362f;
+      background: radial-gradient(ellipse at 50% 65%, #d7ad6618, transparent 70%);
+    }
+    .art img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.88) contrast(1.05); }
+    .part-copy { min-width: 0; }
+    .part-copy .kind {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .part-copy h3 {
+      margin: 0 0 7px;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    .part-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .open-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .open-model::after { color: var(--gold); content: "↗"; font-size: 14px; }
+    .model-note {
+      margin: 18px 0 0;
+      padding: 13px 15px;
+      border-left: 2px solid var(--gold);
+      background: #191b17;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    .vehicle-specs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+    .vehicle-spec {
+      min-height: 90px;
+      padding: 16px;
+      background: #171915;
+    }
+    .vehicle-spec strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--gold);
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+    }
+    .vehicle-spec span { color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .breakdown article {
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #1c1e19, #151713);
+    }
+    .breakdown .kind {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .breakdown h3 {
+      margin: 0 0 9px;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+    }
+    .breakdown p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .source-link { color: var(--gold); text-decoration: none; }
+    .source-link:hover { text-decoration: underline; }
+    footer {
+      padding: 20px 0 28px;
+      border-top: 1px solid var(--line);
+      color: #82867c;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+    #viewer-page { display: none; min-height: 100vh; }
+    .viewer-top { min-height: 64px; }
+    .viewer-intro { padding: 40px 0 25px; }
+    .viewer-intro .eyebrow { margin-bottom: 9px; }
+    .viewer-intro h1 { margin-bottom: 10px; font-size: clamp(36px, 6vw, 60px); }
+    .viewer-intro > p:last-child { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .viewer-shell {
+      position: relative;
+      height: min(68vh, 650px);
+      min-height: 390px;
+      border: 1px solid var(--line);
+      background: radial-gradient(ellipse at 50% 42%, #242821, #10120f 70%);
+    }
+    #model-canvas { display: block; width: 100%; height: 100%; }
+    .viewer-status {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      max-width: calc(100% - 30px);
+      padding: 8px 11px;
+      border: 1px solid #42443c;
+      background: #10120fdd;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .04em;
+      line-height: 1.5;
+    }
+    .viewer-controls { display: flex; flex-wrap: wrap; gap: 9px; padding: 14px 0 48px; }
+    .viewer-controls button {
+      padding: 10px 14px;
+      border: 1px solid #55564b;
+      border-radius: 2px;
+      background: #1b1d18;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .viewer-controls button:hover { border-color: var(--gold); background: #292a21; }
+    .viewer-controls button.primary { border-color: #987945; color: #e9c786; }
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 32px, 540px); }
+      .hero { grid-template-columns: 1fr; padding: 60px 0 44px; }
+      .hero-aside { max-width: 300px; }
+      .section-heading { align-items: start; flex-direction: column; gap: 10px; }
+      .cards { grid-template-columns: 1fr; }
+      .vehicle-specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .breakdown { grid-template-columns: 1fr; }
+      .part-card { min-height: 160px; }
+      .viewer-shell { min-height: 340px; height: 58vh; }
+    }
+    @media (max-width: 410px) {
+      .part-card { grid-template-columns: 68px minmax(0, 1fr); gap: 13px; padding: 14px; }
+      .art { width: 62px; }
+      .part-copy h3 { font-size: 20px; }
+      .viewer-shell { min-height: 300px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="catalog-page">
+    <header class="topbar wrap">
+      <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+      <a class="top-link" href="./saturnV.html">Explore Saturn V ↗</a>
+    </header>
+
+    <main>
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">NASA Space Transportation System · 1981–2011</p>
+          <h1>One orbiter.<br>Three-part <em>stack.</em></h1>
+          <p class="hero-copy">Explore the Shuttle’s external tank, one side booster, and the winged Orbiter. The GLB groups these parts by material; the RS-25 view is a custom single-engine model because the file does not isolate a complete engine.</p>
+        </div>
+        <div class="hero-aside">
+          <strong>STS / Launch configuration</strong>
+          1 Orbiter + 1 external tank<br>
+          2 solid rocket boosters<br>
+          3 Orbiter main engines
+        </div>
+      </section>
+
+      <section class="vehicle-specs wrap" aria-label="Space Shuttle reference specifications">
+        <div class="vehicle-spec"><strong>184 ft</strong><span>Overall Space Shuttle length</span></div>
+        <div class="vehicle-spec"><strong>122 ft</strong><span>Orbiter length</span></div>
+        <div class="vehicle-spec"><strong>78 ft</strong><span>Orbiter wingspan</span></div>
+        <div class="vehicle-spec"><strong>60 × 15 ft</strong><span>Payload bay · about 10,600 ft³</span></div>
+        <div class="vehicle-spec"><strong>3 × RS-25</strong><span>Main engines on the Orbiter</span></div>
+        <div class="vehicle-spec"><strong>2 × SRB</strong><span>Recoverable solid rocket boosters</span></div>
+        <div class="vehicle-spec"><strong>2.65M lb</strong><span>Approx. liftoff thrust per SRB</span></div>
+        <div class="vehicle-spec"><strong>526,126 gal</strong><span>External Tank propellant capacity</span></div>
+      </section>
+
+      <section class="catalog wrap" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Component index / tank · boosters · Orbiter · engine</p>
+            <h2 id="catalog-title">Explore the vehicle</h2>
+          </div>
+          <p>Drag to rotate and use the scroll wheel or pinch to zoom. NASA archive photos are reference imagery and may show other orbiters. The RS-25 view is custom geometry; the other component views use this project’s Challenger GLB.</p>
+        </div>
+
+        <section class="stage-section" aria-labelledby="stack-title">
+          <h3 class="stage-title" id="stack-title">01 / Launch stack <span>Orbiter · tank · boosters</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=external-tank">
+              <span class="card-index">01.1</span>
+              <span class="art" aria-hidden="true"><img src="https://images-assets.nasa.gov/image/KSC-04pd2133/KSC-04pd2133~medium.jpg" alt="" loading="lazy"></span>
+              <span class="part-copy"><span class="kind">Tank · Separate GLB component</span><h3>External tank</h3><p>Forward liquid-oxygen tank, intertank, and larger aft liquid-hydrogen tank feed the Orbiter’s three main engines.</p><span class="open-model">Isolate tank</span></span>
+            </a>
+            <a class="part-card" href="?component=boosters">
+              <span class="card-index">01.2</span>
+              <span class="art" aria-hidden="true"><img src="https://images-assets.nasa.gov/image/KSC-2012-4461/KSC-2012-4461~medium.jpg" alt="" loading="lazy"></span>
+              <span class="part-copy"><span class="kind">Solid rocket booster · One of two</span><h3>Side booster</h3><p>Isolate one SRB from the paired “srb all” geometry in the supplied launch-stack mesh.</p><span class="open-model">Isolate one booster</span></span>
+            </a>
+          </div>
+        </section>
+
+        <section class="stage-section" aria-labelledby="orbiter-title">
+          <h3 class="stage-title" id="orbiter-title">02 / Orbiter assembly <span>Spacecraft · main engines</span></h3>
+          <div class="cards">
+            <a class="part-card" href="?component=orbiter">
+              <span class="card-index">02.1</span>
+              <span class="art" aria-hidden="true"><img src="https://www.nasa.gov/wp-content/uploads/2025/07/0102619orig.jpg?w=520" alt="" loading="lazy"></span>
+              <span class="part-copy"><span class="kind">Orbiter · Reusable spacecraft</span><h3>Orbiter</h3><p>The crewed spacecraft, with the payload bay, delta wings, vertical tail, thermal protection, and landing gear.</p><span class="open-model">Isolate Orbiter</span></span>
+            </a>
+            <a class="part-card" href="?component=engine">
+              <span class="card-index">02.2</span>
+              <span class="art" aria-hidden="true"><img src="https://images-assets.nasa.gov/image/2011-7419/2011-7419~medium.jpg" alt="" loading="lazy"></span>
+              <span class="part-copy"><span class="kind">RS-25 · One of three Orbiter main engines</span><h3>RS-25 engine</h3><p>Inspect a detailed single-engine visualization with a regeneratively cooled nozzle, turbomachinery, and feed lines.</p><span class="open-model">Open RS-25 engine</span></span>
+            </a>
+          </div>
+        </section>
+        <section class="breakdown" aria-label="Space Shuttle component facts">
+          <article>
+            <span class="kind">External tank · front to aft</span>
+            <h3>LOX · intertank · LH2</h3>
+            <p>The forward tank stores liquid oxygen; the intertank connects the propellant tanks and booster attachments; the large aft tank stores liquid hydrogen. Together they hold about 526,126 US gallons and are jettisoned after powered flight.</p>
+          </article>
+          <article>
+            <span class="kind">Solid rocket boosters · pair</span>
+            <h3>Four motor segments each</h3>
+            <p>Each booster has a forward skirt with recovery parachutes, a four-segment solid motor, and an aft skirt with a steerable nozzle. They burn for about two minutes, separate, descend by parachute, and are recovered for refurbishment.</p>
+          </article>
+          <article>
+            <span class="kind">Orbiter · forward to aft</span>
+            <h3>Crew · payload · propulsion</h3>
+            <p>The pressurized crew module is forward and normally carries up to seven crew; the payload bay occupies the mid-fuselage, and the aft section carries three main engines, two OMS pods, and the body flap. A 50-ft Remote Manipulator System handled payloads in orbit.</p>
+          </article>
+        </section>
+        <p class="model-note">3D-file check: the winged Orbiter, tank, and two boosters are grouped inside the GLB assembly mesh under different materials; the Orbiter view excludes the tank and booster materials. The booster view isolates one of the two supplied SRBs. The RS-25 is shown as a custom educational 3D model because the GLB does not contain a separate, identifiable main-engine assembly.</p>
+      </section>
+    </main>
+    <footer><div class="wrap">Launch-stack component views load <code>assets/space-shuttle-challenger/source/Challenger.glb</code>; the RS-25 view uses custom educational geometry. Reference images and hardware specifications: <a class="source-link" href="https://www.nasa.gov/reference/the-space-shuttle/">NASA Space Shuttle Encyclopedia</a>. NASA image credits: NASA / Dimitri Gerondidakis; NASA.</div></footer>
+  </div>
+
+  <main id="viewer-page">
+    <div class="wrap">
+      <header class="viewer-top">
+        <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+        <a class="back-link" href="./spaceshuttle.html">← Back to components</a>
+      </header>
+      <section class="viewer-intro">
+        <p class="eyebrow" id="viewer-kicker">Space Shuttle / Component view</p>
+        <h1 id="viewer-title">Loading component…</h1>
+        <p id="viewer-description">Loading the supplied Challenger 3D model.</p>
+      </section>
+      <div class="viewer-shell">
+        <canvas id="model-canvas" aria-label="Interactive Challenger space shuttle 3D model"></canvas>
+        <div class="viewer-status" id="viewer-status" role="status">Loading 3D model…</div>
+      </div>
+      <div class="viewer-controls">
+        <button class="primary" id="isolate-button" type="button">Isolate component</button>
+        <button id="whole-button" type="button">View supplied assembly</button>
+        <button id="reset-button" type="button">Reset camera</button>
+      </div>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const modelUrl = './assets/space-shuttle-challenger/source/Challenger.glb';
+    const components = {
+      orbiter: {
+        title: 'Orbiter', kicker: 'Challenger / Winged spacecraft',
+        description: 'The winged Orbiter isolated from the external-tank and solid-booster geometry.',
+        materialRoot: 'et_all',
+        includeAllMaterials: true,
+        excludeMaterials: ['et all', 'srb all'],
+        excludeMaterialPrefixes: ['et_'],
+        cameraView: 'orbiter'
+      },
+      'external-tank': {
+        title: 'External tank', kicker: 'Challenger / Propellant tank',
+        description: 'The separate external-tank geometry from the supplied Challenger GLB.',
+        materialRoot: 'et_all',
+        materials: ['et all'],
+        materialPrefixes: ['et_']
+      },
+      boosters: {
+        title: 'Side booster', kicker: 'Challenger / One Solid Rocket Booster',
+        description: 'One SRB isolated from the pair embedded in the supplied GLB’s “srb all” mesh.',
+        materialRoot: 'et_all',
+        materials: ['srb all'],
+        singleBooster: true
+      },
+      engine: {
+        title: 'RS-25 engine', kicker: 'Orbiter / One of three main engines',
+        description: 'A detailed single-engine visualization inspired by the Shuttle’s RS-25. This is an educational model, not engineering CAD.',
+        procedural: 'rs25',
+        selectionMessage: 'Single RS-25 engine visualization · custom educational model.'
+      }
+    };
+
+    const selected = components[new URLSearchParams(location.search).get('component')];
+    if (selected) {
+      document.querySelector('#catalog-page').hidden = true;
+      document.querySelector('#viewer-page').style.display = 'block';
+      document.title = `${selected.title} | Space Shuttle Parts Atlas`;
+      document.querySelector('#viewer-title').textContent = selected.title;
+      document.querySelector('#viewer-kicker').textContent = selected.kicker;
+      document.querySelector('#viewer-description').textContent = selected.description;
+      if (selected.procedural === 'rs25') {
+        document.querySelector('#isolate-button').hidden = true;
+        document.querySelector('#whole-button').hidden = true;
+      }
+      startViewer(selected);
+    }
+
+    function startViewer(component) {
+      const canvas = document.querySelector('#model-canvas');
+      const status = document.querySelector('#viewer-status');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x12140f);
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 10000);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      const studioEnvironment = new RoomEnvironment(renderer);
+      scene.environment = pmremGenerator.fromScene(studioEnvironment, 0.04).texture;
+      studioEnvironment.dispose();
+      pmremGenerator.dispose();
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      scene.add(new THREE.HemisphereLight(0xdce7f0, 0x383125, 2.2));
+      const keyLight = new THREE.DirectionalLight(0xffe6bd, 3.2);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.bias = -0.0001;
+      keyLight.shadow.radius = 5;
+      scene.add(keyLight);
+      const fillLight = new THREE.DirectionalLight(0x8db7e2, 1.6);
+      scene.add(fillLight);
+
+      let modelRoot = null;
+      let componentBounds = null;
+      const temporaryMeshes = [];
+
+      function resize() {
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        camera.aspect = bounds.width / bounds.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(bounds.width, bounds.height, false);
+      }
+
+      function setVisible(root, visible) {
+        root.traverse(node => { node.visible = visible; });
+      }
+
+      function revealNode(node) {
+        let current = node;
+        while (current) {
+          current.visible = true;
+          current = current.parent;
+        }
+        node.traverse(child => { child.visible = true; });
+      }
+
+      function getVisibleBounds(root) {
+        const bounds = new THREE.Box3();
+        root.updateMatrixWorld(true);
+        root.traverse(node => {
+          if (!node.visible || !node.isMesh || !node.geometry) return;
+          if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+          if (node.geometry.boundingBox) {
+            bounds.union(node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld));
+          }
+        });
+        return bounds;
+      }
+
+      function getMeshesWithMaterials(root, materialNames = [], materialPrefixes = [], excludedNames = [], excludedPrefixes = [], includeAll = false) {
+        const wanted = new Set(materialNames.map(name => name.toLowerCase()));
+        const prefixes = materialPrefixes.map(prefix => prefix.toLowerCase());
+        const excluded = new Set(excludedNames.map(name => name.toLowerCase()));
+        const excludedStartsWith = excludedPrefixes.map(prefix => prefix.toLowerCase());
+        const matches = [];
+        root.traverse(node => {
+          if (!node.isMesh) return;
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          if (materials.some(material => {
+            const name = (material.name || '').toLowerCase();
+            const isExcluded = excluded.has(name) || excludedStartsWith.some(prefix => name.startsWith(prefix));
+            return !isExcluded && (includeAll || wanted.has(name) || prefixes.some(prefix => name.startsWith(prefix)));
+          })) matches.push(node);
+        });
+        return matches;
+      }
+
+      function createSingleBoosterMesh(source) {
+        const sourceGeometry = source.geometry;
+        const position = sourceGeometry.getAttribute('position');
+        const index = sourceGeometry.getIndex();
+        const vertexCount = index ? index.count : position.count;
+        const vertices = [];
+        for (let offset = 0; offset + 2 < vertexCount; offset += 3) {
+          const a = index ? index.getX(offset) : offset;
+          const b = index ? index.getX(offset + 1) : offset + 1;
+          const c = index ? index.getX(offset + 2) : offset + 2;
+          const centerY = (position.getY(a) + position.getY(b) + position.getY(c)) / 3;
+          if (centerY > 0) vertices.push(a, b, c);
+        }
+        if (!vertices.length) return null;
+
+        const geometry = new THREE.BufferGeometry();
+        for (const name of Object.keys(sourceGeometry.attributes)) {
+          const attribute = sourceGeometry.getAttribute(name);
+          const values = new attribute.array.constructor(vertices.length * attribute.itemSize);
+          let cursor = 0;
+          for (const vertex of vertices) {
+            const start = vertex * attribute.itemSize;
+            values.set(attribute.array.subarray(start, start + attribute.itemSize), cursor);
+            cursor += attribute.itemSize;
+          }
+          geometry.setAttribute(name, new THREE.BufferAttribute(values, attribute.itemSize, attribute.normalized));
+        }
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
+        const single = source.clone();
+        single.name = 'Single side booster';
+        single.geometry = geometry;
+        return single;
+      }
+
+      function focusOnBounds(bounds, useComponentView = true) {
+        if (bounds.isEmpty()) {
+          status.textContent = 'No visible model geometry is available for this view.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const distance = Math.max(maxSize * 1.4, 2);
+        if (useComponentView && component.cameraView === 'orbiter') {
+          camera.up.set(1, 0, 0);
+          camera.position.set(center.x, center.y, center.z + distance * 1.45);
+        } else {
+          camera.up.set(0, 1, 0);
+          camera.position.set(center.x + distance * 0.9, center.y + distance * 0.55, center.z + distance * 1.15);
+        }
+        camera.near = Math.max(distance / 1000, 0.01);
+        camera.far = Math.max(distance * 30, 100);
+        camera.updateProjectionMatrix();
+        controls.target.copy(center);
+        controls.minDistance = Math.max(maxSize * 0.2, 0.5);
+        controls.maxDistance = Math.max(maxSize * 8, 20);
+        controls.update();
+      }
+
+      function showWholeVehicle() {
+        if (!modelRoot) return;
+        temporaryMeshes.forEach(mesh => mesh.removeFromParent());
+        temporaryMeshes.length = 0;
+        setVisible(modelRoot, true);
+        componentBounds = getVisibleBounds(modelRoot);
+        focusOnBounds(componentBounds, false);
+        status.textContent = 'Complete supplied Shuttle model · Orbiter, tank, and side boosters';
+      }
+
+      function showSelection() {
+        if (!modelRoot) return;
+        temporaryMeshes.forEach(mesh => mesh.removeFromParent());
+        temporaryMeshes.length = 0;
+        setVisible(modelRoot, false);
+        const nodes = component.nodes || [];
+        const materialRoot = component.materialRoot ? modelRoot.getObjectByName(component.materialRoot) : modelRoot;
+        const needsMaterialSelection = component.materials || component.includeAllMaterials;
+        const selectedMeshes = needsMaterialSelection && materialRoot
+          ? getMeshesWithMaterials(
+            materialRoot,
+            component.materials,
+            component.materialPrefixes,
+            component.excludeMaterials,
+            component.excludeMaterialPrefixes,
+            component.includeAllMaterials
+          )
+          : [];
+        const missing = nodes.filter(name => !modelRoot.getObjectByName(name));
+        if (missing.length || !materialRoot || (needsMaterialSelection && !selectedMeshes.length)) {
+          const missingMaterials = needsMaterialSelection && !selectedMeshes.length ? component.materials : [];
+          console.error('The supplied Challenger GLB is missing required component geometry:', { nodes: missing, materials: missingMaterials });
+          setVisible(modelRoot, true);
+          componentBounds = getVisibleBounds(modelRoot);
+          focusOnBounds(componentBounds);
+          status.textContent = 'The supplied GLB is missing this component’s geometry. Showing the complete model instead.';
+          return;
+        }
+        nodes.forEach(name => revealNode(modelRoot.getObjectByName(name)));
+        if (component.singleBooster && selectedMeshes.length) {
+          const single = createSingleBoosterMesh(selectedMeshes[0]);
+          if (single) {
+            selectedMeshes[0].parent.add(single);
+            temporaryMeshes.push(single);
+            revealNode(single);
+          }
+        } else {
+          selectedMeshes.forEach(revealNode);
+        }
+        componentBounds = getVisibleBounds(modelRoot);
+        if (componentBounds.isEmpty()) {
+          console.error('The supplied Challenger GLB component has no visible mesh geometry:', component.title);
+          setVisible(modelRoot, true);
+          componentBounds = getVisibleBounds(modelRoot);
+          focusOnBounds(componentBounds);
+          status.textContent = 'This component has no visible geometry in the supplied GLB. Showing the complete model instead.';
+          return;
+        }
+        focusOnBounds(componentBounds);
+        status.textContent = component.selectionMessage || 'Component isolated · drag to rotate';
+      }
+
+      function createRs25Engine() {
+        const engine = new THREE.Group();
+        engine.name = 'RS-25 single-engine educational model';
+        const steel = new THREE.MeshStandardMaterial({ color: 0xb9bcb9, metalness: 0.82, roughness: 0.28 });
+        const darkSteel = new THREE.MeshStandardMaterial({ color: 0x454947, metalness: 0.76, roughness: 0.34 });
+        const copper = new THREE.MeshStandardMaterial({ color: 0x9a6242, metalness: 0.8, roughness: 0.3 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xc3a15e, metalness: 0.82, roughness: 0.26 });
+        const nozzleInterior = new THREE.MeshStandardMaterial({ color: 0x292c2b, metalness: 0.55, roughness: 0.5, side: THREE.DoubleSide });
+
+        function addMesh(geometry, material, position = [0, 0, 0], rotation = [0, 0, 0]) {
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.position.set(...position);
+          mesh.rotation.set(...rotation);
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          engine.add(mesh);
+          return mesh;
+        }
+
+        function addCylinder(radiusTop, radiusBottom, height, material, position, segments = 48) {
+          return addMesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments), material, position);
+        }
+
+        function addRing(radius, tube, y, material) {
+          return addMesh(new THREE.TorusGeometry(radius, tube, 10, 64), material, [0, y, 0], [Math.PI / 2, 0, 0]);
+        }
+
+        function addPipe(points, radius, material) {
+          const curve = new THREE.CatmullRomCurve3(points.map(point => new THREE.Vector3(...point)));
+          addMesh(new THREE.TubeGeometry(curve, 32, radius, 8, false), material);
+        }
+
+        addCylinder(0.39, 0.42, 0.72, darkSteel, [0, 0.82, 0]);
+        addCylinder(0.34, 0.4, 0.28, steel, [0, 1.28, 0]);
+        addCylinder(0.47, 0.42, 0.12, copper, [0, 0.43, 0]);
+        addCylinder(0.48, 0.48, 0.12, steel, [0, 1.55, 0]);
+        addCylinder(0.3, 0.34, 0.28, gold, [0, 1.73, 0]);
+        addRing(0.47, 0.035, 1.54, gold);
+        addRing(0.43, 0.025, 0.22, copper);
+
+        const nozzleProfile = [
+          [0.34, 0.52], [0.39, 0.16], [0.48, -0.25], [0.62, -0.78],
+          [0.79, -1.38], [0.96, -2.05], [1.01, -2.12], [0.91, -2.12],
+          [0.75, -1.38], [0.58, -0.78], [0.44, -0.25], [0.36, 0.16]
+        ].map(point => new THREE.Vector2(point[0], point[1]));
+        addMesh(new THREE.LatheGeometry(nozzleProfile, 96), steel);
+        const innerProfile = [
+          [0.337, 0.49], [0.37, 0.12], [0.45, -0.28], [0.59, -0.8],
+          [0.77, -1.4], [0.94, -2.04]
+        ].map(point => new THREE.Vector2(point[0], point[1]));
+        addMesh(new THREE.LatheGeometry(innerProfile, 96), nozzleInterior);
+        addRing(0.96, 0.035, -2.08, copper);
+
+        for (let index = 0; index < 12; index += 1) {
+          const progress = index / 11;
+          const y = 0.04 - progress * 2.0;
+          const radius = 0.49 + progress * 0.45;
+          addRing(radius, 0.012, y, index % 3 === 0 ? copper : steel);
+        }
+
+        for (let index = 0; index < 4; index += 1) {
+          const angle = index * Math.PI / 2 + Math.PI / 4;
+          const sin = Math.sin(angle);
+          const cos = Math.cos(angle);
+          const pump = addCylinder(0.15, 0.18, 0.42, darkSteel, [sin * 0.67, 1.02, cos * 0.67], 24);
+          pump.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(sin, 0, cos));
+          const valve = addMesh(new THREE.SphereGeometry(0.16, 20, 16), gold, [sin * 0.48, 1.46, cos * 0.48]);
+          valve.scale.set(1, 0.72, 1);
+          addPipe([
+            [sin * 0.36, 1.62, cos * 0.36],
+            [sin * 0.66, 1.55, cos * 0.66],
+            [sin * 0.76, 1.28, cos * 0.76],
+            [sin * 0.58, 0.92, cos * 0.58]
+          ], 0.035, index % 2 ? copper : gold);
+          addPipe([
+            [sin * 0.38, 0.35, cos * 0.38],
+            [sin * 0.56, 0.58, cos * 0.56],
+            [sin * 0.72, 0.5, cos * 0.72],
+            [sin * 0.8, 0.18, cos * 0.8]
+          ], 0.023, steel);
+        }
+
+        for (let index = 0; index < 8; index += 1) {
+          const angle = index * Math.PI / 4;
+          const sin = Math.sin(angle);
+          const cos = Math.cos(angle);
+          addPipe([
+            [sin * 0.42, 0.34, cos * 0.42],
+            [sin * 0.56, -0.2, cos * 0.56],
+            [sin * 0.78, -1.12, cos * 0.78],
+            [sin * 0.96, -2.02, cos * 0.96]
+          ], 0.012, darkSteel);
+        }
+        return engine;
+      }
+
+      function finishLoading(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        modelRoot.traverse(node => {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = true;
+          }
+        });
+        const modelBounds = getVisibleBounds(modelRoot);
+        const modelCenter = modelBounds.getCenter(new THREE.Vector3());
+        const modelSize = modelBounds.getSize(new THREE.Vector3());
+        const modelScale = Math.max(modelSize.x, modelSize.y, modelSize.z);
+        const floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(modelScale * 3, modelScale * 3),
+          new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.32 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = modelBounds.min.y - modelScale * 0.01;
+        floor.receiveShadow = true;
+        scene.add(floor);
+        keyLight.position.set(modelCenter.x + modelScale, modelCenter.y + modelScale * 1.6, modelCenter.z + modelScale);
+        keyLight.target.position.copy(modelCenter);
+        scene.add(keyLight.target);
+        keyLight.shadow.camera.left = -modelScale * 2;
+        keyLight.shadow.camera.right = modelScale * 2;
+        keyLight.shadow.camera.top = modelScale * 2;
+        keyLight.shadow.camera.bottom = -modelScale * 2;
+        keyLight.shadow.camera.far = modelScale * 5;
+        keyLight.shadow.camera.updateProjectionMatrix();
+        fillLight.position.set(modelCenter.x - modelScale, modelCenter.y + modelScale * 0.7, modelCenter.z - modelScale);
+        fillLight.target.position.copy(modelCenter);
+        scene.add(fillLight.target);
+        if (component.procedural === 'rs25') {
+          componentBounds = getVisibleBounds(modelRoot);
+          focusOnBounds(componentBounds);
+          status.textContent = component.selectionMessage;
+        } else {
+          showSelection();
+        }
+      }
+
+      if (component.procedural === 'rs25') {
+        finishLoading(createRs25Engine());
+      } else {
+        new GLTFLoader().load(modelUrl, gltf => {
+          finishLoading(gltf.scene);
+        }, event => {
+          if (event.total) status.textContent = `Loading Challenger model · ${Math.min(100, Math.round(event.loaded / event.total * 100))}%`;
+        }, error => {
+          console.error('Unable to load the supplied Challenger GLB:', error);
+          status.textContent = 'Unable to load the supplied Challenger model. Check the asset path and try again.';
+        });
+      }
+
+      document.querySelector('#isolate-button').addEventListener('click', showSelection);
+      document.querySelector('#whole-button').addEventListener('click', showWholeVehicle);
+      document.querySelector('#reset-button').addEventListener('click', () => {
+        if (componentBounds) focusOnBounds(componentBounds);
+      });
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+      function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+  </script>
+</body>
+</html>
