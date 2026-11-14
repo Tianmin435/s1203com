@@ -145,6 +145,30 @@
     }
     .tank-icon::before { top: 12%; }
     .tank-icon::after { bottom: 12%; }
+    .stage-connector-icon {
+      position: relative;
+      display: block;
+      width: 72px;
+      height: 76px;
+      border: 1px solid #747a78;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, #222823 0 35%, #aeb6b4 36% 42%, #4d5554 43% 52%, #c8cfca 53% 59%, #202521 60% 100%);
+      box-shadow: 0 8px 18px #0008, inset 0 0 12px #fff4;
+    }
+    .stage-connector-icon::before,
+    .stage-connector-icon::after {
+      position: absolute;
+      left: 50%;
+      width: 56px;
+      height: 12px;
+      border: 1px solid #d7ad66;
+      border-radius: 50%;
+      background: #626966;
+      content: "";
+      transform: translateX(-50%);
+    }
+    .stage-connector-icon::before { top: 4px; }
+    .stage-connector-icon::after { bottom: 4px; }
     .external-icon {
       width: 30px;
       height: 104px;
@@ -444,13 +468,14 @@
           <p class="hero-copy">Explore fuel tanks, boosters, engine variants, crewed spacecraft, fairings, recovery gear, and safety systems. Choose a component to rotate and inspect its 3D model.</p>
         </div>
         <aside class="hero-aside">
-          <strong>8 component categories</strong>
+          <strong>9 component categories</strong>
           5 fuel tanks<br>
           3 booster types<br>
           20 engine variants<br>
           3 crew spacecraft<br>
           3 additional systems<br>
           1 satellite model<br>
+          1 staging connector<br>
           Drag to rotate · scroll to zoom
         </aside>
       </section>
@@ -708,6 +733,21 @@
               </a>
             </div>
           </section>
+          <section class="category-section" id="staging" aria-labelledby="staging-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">09 / Staging · 1 component</p>
+                <h2 id="staging-category-title">Staging</h2>
+              </div>
+              <p>Use the universal separator to join successive fuel-tank stages, with a flexible collar that adapts to different tank diameters.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=stage-connector">
+                <span class="card-index">09.1</span><span class="art" aria-hidden="true"><span class="stage-connector-icon"></span></span>
+                <span class="part-copy"><span class="kind">Universal stage interface · Adjustable collar</span><h3>Stage Connector</h3><p>A metallic ring-like separator that connects adjacent fuel-tank stages across a range of game-scale diameters.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+            </div>
+          </section>
       </section>
     </main>
     <footer><div class="wrap">Engine models reuse the Saturn V F-1/J-2 assets, Falcon 9 Merlin geometry, and SLS RS-25/RL10 geometry. Falcon 9 fairing and landing-leg models reuse the source explorer's procedural geometry; the Apollo Launch Abort System reuses its Saturn V model node. Crew spacecraft reuse Apollo nodes, the supplied Orion GLB, and the Shuttle Orbiter groups. Satellite uses <code>assets/space_satellite.glb</code>. Shuttle models use <code>assets/space-shuttle-challenger/source/Challenger.glb</code> and Orion uses <code>assets/orion_spacecraft.glb</code>.</div></footer>
@@ -840,6 +880,13 @@
         kicker: `Fuel tanks / ${tank.engines}-engine configuration`,
         procedural: 'tank'
       }])),
+      'stage-connector': {
+        title: 'Stage Connector',
+        kicker: 'Staging / Universal stage interface',
+        description: 'A flexible metallic separator ring designed to connect adjacent fuel-tank stages across different game-scale diameters.',
+        procedural: 'stage-connector',
+        selectionMessage: 'Universal stage separator · drag to rotate'
+      },
       'external-tank': {
         title: 'External Tank',
         kicker: 'Space Shuttle / Propellant tank',
@@ -1309,6 +1356,56 @@
         }
         scene.add(tank);
         finishModel(tank);
+      }
+
+      function addStageConnectorModel() {
+        const { rod } = addFairingHelpers();
+        const materials = {
+          steel: new THREE.MeshPhysicalMaterial({ color: 0xb9c1bf, metalness: 0.94, roughness: 0.22, clearcoat: 0.42 }),
+          darkSteel: new THREE.MeshStandardMaterial({ color: 0x3f4748, metalness: 0.86, roughness: 0.32 }),
+          accent: new THREE.MeshStandardMaterial({ color: 0xc49a58, metalness: 0.78, roughness: 0.28 })
+        };
+        const connector = new THREE.Group();
+        connector.name = 'Universal stage separator';
+        const flangeRadii = [1.42, 1.2];
+        for (const y of [-0.34, 0.34]) {
+          const flange = new THREE.Mesh(new THREE.CylinderGeometry(1.42, 1.42, 0.16, 64, 1, true), materials.steel);
+          flange.position.y = y;
+          flange.castShadow = true;
+          flange.receiveShadow = true;
+          connector.add(flange);
+          const outerRing = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.105, 12, 64), materials.accent);
+          outerRing.rotation.x = Math.PI / 2;
+          outerRing.position.y = y + (y < 0 ? -0.09 : 0.09);
+          outerRing.castShadow = true;
+          connector.add(outerRing);
+        }
+        for (const radius of flangeRadii) {
+          const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, radius === 1.42 ? 0.075 : 0.06, 12, 64), materials.steel);
+          ring.rotation.x = Math.PI / 2;
+          ring.position.y = 0;
+          ring.castShadow = true;
+          connector.add(ring);
+        }
+        for (let index = 0; index < 8; index += 1) {
+          const angle = index * Math.PI / 4;
+          const radius = index % 2 === 0 ? 1.25 : 1.06;
+          rod(connector, [Math.cos(angle) * radius, -0.28, Math.sin(angle) * radius], [Math.cos(angle) * radius, 0.28, Math.sin(angle) * radius], 0.035, materials.darkSteel);
+        }
+        for (const y of [-0.22, -0.11, 0.11, 0.22]) {
+          const radius = y < 0 ? 1.26 : 1.08;
+          const bellows = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.045, 10, 64), materials.darkSteel);
+          bellows.rotation.x = Math.PI / 2;
+          bellows.position.y = y;
+          bellows.castShadow = true;
+          connector.add(bellows);
+        }
+        const collar = new THREE.Mesh(new THREE.CylinderGeometry(1.08, 1.26, 0.46, 64, 1, true), materials.darkSteel);
+        collar.castShadow = true;
+        collar.receiveShadow = true;
+        connector.add(collar);
+        scene.add(connector);
+        finishModel(connector);
       }
 
       function getMeshesWithMaterials(root, materialNames = [], materialPrefixes = [], excludedNames = [], excludedPrefixes = [], includeAll = false) {
@@ -1847,6 +1944,8 @@
         startCrewModel();
       } else if (component.engine) {
         startEngineModel();
+      } else if (component.procedural === 'stage-connector') {
+        addStageConnectorModel();
       } else if (component.procedural === 'tank') {
         addTankMesh();
       } else if (component.procedural === 'fairing') {
