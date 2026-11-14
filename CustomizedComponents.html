@@ -1,0 +1,1891 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <title>Components' Categories — Orbital Atlas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #10120f;
+      color: #f2efe7;
+      --gold: #d7ad66;
+      --muted: #a7aaa0;
+      --line: #383b33;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+    * { box-sizing: border-box; }
+    body { min-width: 320px; min-height: 100vh; margin: 0; }
+    a { color: inherit; }
+    button { font: inherit; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar, .viewer-top {
+      display: flex;
+      min-height: 74px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { color: #f2efe7; font-size: 12px; font-weight: 750; letter-spacing: .17em; text-decoration: none; }
+    .brand span { color: var(--gold); }
+    .top-link, .back-link { color: var(--muted); font-size: 12px; text-decoration: none; }
+    .top-link:hover, .back-link:hover { color: var(--gold); }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      align-items: end;
+      gap: 28px;
+      padding: 82px 0 66px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow, .section-kicker, .kind {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-family: var(--serif);
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .96;
+    }
+    h1 em { color: var(--gold); font-weight: 400; }
+    .hero-copy { max-width: 590px; margin-bottom: 0; color: #b7b9b1; font-size: 15px; line-height: 1.8; }
+    .hero-aside {
+      padding: 0 0 4px 18px;
+      border-left: 1px solid var(--gold);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .hero-aside strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #f2efe7;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .catalog { padding: 62px 0 76px; }
+    .category-section + .category-section { margin-top: 56px; padding-top: 42px; border-top: 1px solid var(--line); }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .section-heading h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(30px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -.03em;
+    }
+    .section-heading > p { max-width: 450px; margin-bottom: 2px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .part-card {
+      position: relative;
+      display: grid;
+      min-height: 174px;
+      grid-template-columns: 90px minmax(0, 1fr);
+      align-items: center;
+      gap: 20px;
+      padding: 19px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: linear-gradient(135deg, #1c1e19, #151713);
+      text-decoration: none;
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+    .part-card:hover, .part-card:focus-visible {
+      transform: translateY(-2px);
+      border-color: #9c7d4d;
+      background: linear-gradient(135deg, #24251e, #191b17);
+    }
+    .card-index { position: absolute; top: 13px; right: 15px; color: #777a70; font-size: 10px; letter-spacing: .12em; }
+    .art {
+      display: grid;
+      width: 82px;
+      height: 118px;
+      place-items: center;
+      overflow: hidden;
+      border-right: 1px solid #34362f;
+      background: radial-gradient(ellipse at 50% 65%, #d7ad6618, transparent 70%);
+    }
+    .tank-icon {
+      position: relative;
+      display: block;
+      width: var(--tank-width, 42px);
+      height: var(--tank-height, 86px);
+      border: 1px solid #c8c7bd;
+      border-radius: 0;
+      background: linear-gradient(90deg, #626661 0%, #c4c6c1 16%, #f1f0e9 42%, #b4b6b1 74%, #666a65 100%);
+      box-shadow: 0 8px 18px #0008, inset 0 0 9px #fff5;
+    }
+    .tank-icon::before, .tank-icon::after {
+      position: absolute;
+      right: -2px;
+      left: -2px;
+      height: 3px;
+      border: 1px solid #d5ad66;
+      background: #77796f;
+      content: "";
+    }
+    .tank-icon::before { top: 12%; }
+    .tank-icon::after { bottom: 12%; }
+    .external-icon {
+      width: 30px;
+      height: 104px;
+      border: 1px solid #e8a26b;
+      border-radius: 48% 48% 13% 13% / 16% 16% 5% 5%;
+      background: linear-gradient(90deg, #8b3c23, #e67839 42%, #d8612e 72%, #78351f);
+      box-shadow: 0 8px 18px #0008;
+    }
+    .booster-icon {
+      position: relative;
+      display: block;
+      width: 27px;
+      height: 82px;
+      border: 1px solid var(--booster-accent);
+      border-radius: 4px 4px 2px 2px;
+      background: linear-gradient(90deg, #0005, transparent 45%, #0004), var(--booster-color);
+      box-shadow: 0 8px 18px #0008;
+    }
+    .booster-icon::before {
+      position: absolute;
+      top: -19px;
+      left: 3px;
+      width: 19px;
+      height: 20px;
+      background: var(--booster-color);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      content: "";
+    }
+    .booster-icon::after {
+      position: absolute;
+      right: -2px;
+      bottom: 8px;
+      left: -2px;
+      height: 4px;
+      border: 1px solid var(--booster-accent);
+      background: var(--booster-accent);
+      content: "";
+    }
+    .booster-srb { --booster-color: #e5e3d9; --booster-accent: #d7ad66; }
+    .booster-liquid { --booster-color: #3489bd; --booster-accent: #b8d7e8; }
+    .booster-hybrid { --booster-color: #c85e32; --booster-accent: #e3b46b; }
+    .engine-family { margin-top: 34px; }
+    .engine-family h3 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .engine-icon {
+      position: relative;
+      display: block;
+      width: 52px;
+      height: 82px;
+    }
+    .engine-icon::before {
+      position: absolute;
+      top: 4px;
+      left: 16px;
+      width: 20px;
+      height: 24px;
+      border: 1px solid #ffffff66;
+      border-radius: 4px 4px 1px 1px;
+      background: linear-gradient(90deg, #0005, transparent 48%, #0003), var(--engine-color);
+      content: "";
+    }
+    .engine-icon::after {
+      position: absolute;
+      top: 25px;
+      left: 7px;
+      width: 38px;
+      height: 46px;
+      border: 1px solid #ffffff55;
+      background: linear-gradient(90deg, #0005, transparent 48%, #0003), var(--engine-color);
+      clip-path: polygon(24% 0, 76% 0, 100% 100%, 0 100%);
+      content: "";
+    }
+    .engine-icon span {
+      position: absolute;
+      right: 12px;
+      bottom: 4px;
+      left: 12px;
+      z-index: 1;
+      height: 3px;
+      background: #d7ad66;
+    }
+    .crew-icon { position: relative; display: block; width: 66px; height: 86px; }
+    .crew-capsule {
+      width: 42px;
+      height: 68px;
+      margin-top: 9px;
+      border: 1px solid #d5d9db;
+      border-radius: 48% 48% 20% 20% / 35% 35% 12% 12%;
+      background: linear-gradient(90deg, #646f79, var(--crew-color), #e8ebea 58%, #777f84);
+      box-shadow: 0 8px 18px #0008;
+    }
+    .crew-capsule::before {
+      position: absolute;
+      top: -9px;
+      left: 8px;
+      width: 24px;
+      height: 12px;
+      border: 1px solid #c9cdd0;
+      border-radius: 50% 50% 0 0;
+      background: #343a40;
+      content: "";
+    }
+    .crew-apollo { --crew-color: #dbdcd7; }
+    .crew-orion { --crew-color: #74a8d1; }
+    .crew-orbiter {
+      width: 70px;
+      height: 40px;
+      margin-top: 19px;
+      background: linear-gradient(180deg, #e7e8e4, #747d83);
+      clip-path: polygon(0 53%, 35% 43%, 47% 0, 57% 43%, 100% 52%, 70% 66%, 61% 100%, 51% 69%, 39% 100%, 30% 67%);
+      filter: drop-shadow(0 8px 8px #0008);
+    }
+    .fairing-icon { position: relative; display: block; width: 58px; height: 96px; }
+    .fairing-icon::before, .fairing-icon::after {
+      position: absolute;
+      top: 3px;
+      width: 27px;
+      height: 90px;
+      border: 1px solid #d5d9d4;
+      background: linear-gradient(90deg, #717a7d, #e2e4df 68%, #aeb4b1);
+      content: "";
+      filter: drop-shadow(0 7px 8px #0008);
+    }
+    .fairing-icon::before { left: 0; clip-path: polygon(50% 0, 100% 9%, 100% 100%, 0 100%); }
+    .fairing-icon::after { right: 0; clip-path: polygon(0 9%, 50% 0, 100% 100%, 0 100%); }
+    .landing-icon { position: relative; display: block; width: 72px; height: 92px; }
+    .landing-icon i {
+      position: absolute;
+      top: 7px;
+      left: 34px;
+      width: 4px;
+      height: 76px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #59636a, #c0c6c6 55%, #535c62);
+      transform-origin: 50% 0;
+      box-shadow: 0 5px 8px #0008;
+    }
+    .landing-icon i:nth-child(1) { transform: rotate(25deg); }
+    .landing-icon i:nth-child(2) { transform: rotate(-25deg); }
+    .landing-icon i:nth-child(3) { transform: rotate(155deg); }
+    .landing-icon i:nth-child(4) { transform: rotate(-155deg); }
+    .abort-icon { position: relative; display: block; width: 54px; height: 98px; }
+    .abort-icon::before {
+      position: absolute;
+      top: 13px;
+      left: 16px;
+      width: 22px;
+      height: 80px;
+      background: repeating-linear-gradient(180deg, #c8d0d1 0 13px, #b85a3b 13px 20px);
+      clip-path: polygon(50% 0, 100% 11%, 88% 100%, 12% 100%, 0 11%);
+      content: "";
+      filter: drop-shadow(0 7px 8px #0008);
+    }
+    .abort-icon::after {
+      position: absolute;
+      top: 0;
+      left: 22px;
+      width: 10px;
+      height: 18px;
+      border: 1px solid #d7dad4;
+      background: #e6e5dc;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      content: "";
+    }
+    .satellite-icon { position: relative; display: block; width: 76px; height: 74px; }
+    .satellite-icon::before {
+      position: absolute;
+      top: 24px;
+      left: 29px;
+      width: 18px;
+      height: 26px;
+      border: 1px solid #d6bd80;
+      background: linear-gradient(90deg, #716144, #d6c28e 52%, #706247);
+      box-shadow: 0 6px 10px #0008;
+      content: "";
+    }
+    .satellite-icon::after {
+      position: absolute;
+      top: 32px;
+      left: 37px;
+      width: 30px;
+      height: 2px;
+      background: #d7ad66;
+      content: "";
+    }
+    .satellite-icon i {
+      position: absolute;
+      top: 26px;
+      width: 24px;
+      height: 22px;
+      border: 1px solid #a9bdcb;
+      background: repeating-linear-gradient(90deg, #23466a 0 5px, #7790a4 5px 6px);
+      box-shadow: 0 5px 9px #0008;
+    }
+    .satellite-icon i:first-child { left: 0; }
+    .satellite-icon i:last-child { right: 0; }
+    .part-copy { min-width: 0; }
+    .part-copy .kind { display: block; margin-bottom: 8px; font-size: 9px; letter-spacing: .15em; }
+    .part-copy h3 { margin: 0 0 7px; font-family: var(--serif); font-size: 23px; font-weight: 400; letter-spacing: -.02em; }
+    .part-copy p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .open-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+      color: #f2efe7;
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .open-model::after { color: var(--gold); content: "↗"; font-size: 14px; }
+    .model-note {
+      margin: 22px 0 0;
+      padding: 13px 15px;
+      border-left: 2px solid var(--gold);
+      background: #191b17;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    footer { padding: 20px 0 28px; border-top: 1px solid var(--line); color: #82867c; font-size: 10px; line-height: 1.7; }
+    #viewer-page { display: none; min-height: 100vh; }
+    .viewer-top { min-height: 64px; }
+    .viewer-intro { padding: 40px 0 25px; }
+    .viewer-intro .eyebrow { margin-bottom: 9px; }
+    .viewer-intro h1 { margin-bottom: 10px; font-size: clamp(36px, 6vw, 60px); }
+    .viewer-intro #viewer-description { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .viewer-intro #viewer-specifications { margin: 9px 0 0; color: var(--gold); font-size: 12px; line-height: 1.7; }
+    .viewer-shell {
+      position: relative;
+      height: min(68vh, 650px);
+      min-height: 390px;
+      border: 1px solid var(--line);
+      background: radial-gradient(ellipse at 50% 42%, #242821, #10120f 70%);
+    }
+    #model-canvas { display: block; width: 100%; height: 100%; }
+    .viewer-status {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      max-width: calc(100% - 30px);
+      padding: 8px 11px;
+      border: 1px solid #42443c;
+      background: #10120fdd;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .04em;
+      line-height: 1.5;
+    }
+    .viewer-controls { display: flex; flex-wrap: wrap; gap: 9px; padding: 14px 0 48px; }
+    .viewer-controls button {
+      padding: 10px 14px;
+      border: 1px solid #55564b;
+      border-radius: 2px;
+      background: #1b1d18;
+      color: #f2efe7;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .viewer-controls button:hover { border-color: var(--gold); background: #292a21; }
+    .viewer-controls button.primary { border-color: #987945; color: #e9c786; }
+    @media (max-width: 700px) {
+      .wrap { width: min(100% - 32px, 540px); }
+      .hero { grid-template-columns: 1fr; padding: 60px 0 44px; }
+      .hero-aside { max-width: 300px; }
+      .section-heading { align-items: start; flex-direction: column; gap: 10px; }
+      .cards { grid-template-columns: 1fr; }
+      .viewer-shell { min-height: 340px; height: 58vh; }
+    }
+    @media (max-width: 410px) {
+      .part-card { grid-template-columns: 68px minmax(0, 1fr); gap: 13px; padding: 14px; }
+      .art { width: 62px; }
+      .part-copy h3 { font-size: 20px; }
+      .viewer-shell { min-height: 300px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div id="catalog-page">
+    <header class="topbar wrap">
+      <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+      <a class="top-link" href="./spaceshuttle.html">Explore Space Shuttle ↗</a>
+    </header>
+    <main>
+      <section class="hero wrap">
+        <div>
+          <p class="eyebrow">Orbital Atlas / Component catalog</p>
+          <h1>Components' <em>categories.</em></h1>
+          <p class="hero-copy">Explore fuel tanks, boosters, engine variants, crewed spacecraft, fairings, recovery gear, and safety systems. Choose a component to rotate and inspect its 3D model.</p>
+        </div>
+        <aside class="hero-aside">
+          <strong>8 component categories</strong>
+          5 fuel tanks<br>
+          3 booster types<br>
+          20 engine variants<br>
+          3 crew spacecraft<br>
+          3 additional systems<br>
+          1 satellite model<br>
+          Drag to rotate · scroll to zoom
+        </aside>
+      </section>
+      <section class="catalog wrap">
+        <section class="category-section" id="fuel-tanks" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">01 / Fuel tanks · 5 parts</p>
+            <h2 id="catalog-title">Fuel Tanks</h2>
+          </div>
+          <p>The cylinder models share one reusable design and scale in width and height for each engine-count setup. These are illustrative, game-style proportions, not flight-rated engineering specifications.</p>
+        </div>
+        <div class="cards">
+          <a class="part-card" href="?component=five-engine">
+            <span class="card-index">01.1</span><span class="art" aria-hidden="true"><span class="tank-icon" style="--tank-width:49px;--tank-height:104px"></span></span>
+            <span class="part-copy"><span class="kind">Modular cylinder · 5 engines</span><h3>Five-Engine Fuel Tank</h3><p>Largest envelope in the family, with a wider barrel and taller propellant section.</p><span class="open-model">Inspect 3D model</span></span>
+          </a>
+          <a class="part-card" href="?component=four-engine">
+            <span class="card-index">01.2</span><span class="art" aria-hidden="true"><span class="tank-icon" style="--tank-width:45px;--tank-height:96px"></span></span>
+            <span class="part-copy"><span class="kind">Modular cylinder · 4 engines</span><h3>Four-Engine Fuel Tank</h3><p>A balanced mid-size tank for a four-engine rocket setup.</p><span class="open-model">Inspect 3D model</span></span>
+          </a>
+          <a class="part-card" href="?component=three-engine">
+            <span class="card-index">01.3</span><span class="art" aria-hidden="true"><span class="tank-icon" style="--tank-width:40px;--tank-height:88px"></span></span>
+            <span class="part-copy"><span class="kind">Modular cylinder · 3 engines</span><h3>Three-Engine Fuel Tank</h3><p>A compact-width design scaled for a three-engine vehicle.</p><span class="open-model">Inspect 3D model</span></span>
+          </a>
+          <a class="part-card" href="?component=two-engine">
+            <span class="card-index">01.4</span><span class="art" aria-hidden="true"><span class="tank-icon" style="--tank-width:35px;--tank-height:78px"></span></span>
+            <span class="part-copy"><span class="kind">Modular cylinder · 2 engines</span><h3>Two-Engine Fuel Tank</h3><p>The smallest and narrowest member of the shared tank family.</p><span class="open-model">Inspect 3D model</span></span>
+          </a>
+          <a class="part-card" href="?component=external-tank">
+            <span class="card-index">01.5</span><span class="art" aria-hidden="true"><span class="external-icon"></span></span>
+            <span class="part-copy"><span class="kind">Space Shuttle · supplied GLB</span><h3>External Tank</h3><p>The orange external tank isolated from the Shuttle launch-stack model.</p><span class="open-model">Inspect 3D model</span></span>
+          </a>
+        </div>
+        <p class="model-note">Game-style sizing uses engine count as a simple build-choice tradeoff: higher-count setups have a larger visual tank envelope. The dimensions are relative display proportions only; real tank capacity depends on vehicle design and mission requirements.</p>
+        </section>
+        <section class="category-section" id="boosters" aria-labelledby="booster-category-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">02 / Boosters · 3 parts</p>
+              <h2 id="booster-category-title">Boosters</h2>
+            </div>
+            <p>Compare the same Shuttle booster model in three color-coded propellant variants.</p>
+          </div>
+          <div class="cards">
+            <a class="part-card" href="?component=srb">
+              <span class="card-index">02.1</span><span class="art" aria-hidden="true"><span class="booster-icon booster-srb"></span></span>
+              <span class="part-copy"><span class="kind">Solid propellant · Shuttle GLB</span><h3>Solid Rocket Booster (SRB)</h3><p>One Shuttle side booster isolated from the supplied launch-stack model.</p><span class="open-model">Inspect 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=liquid-side-booster">
+              <span class="card-index">02.2</span><span class="art" aria-hidden="true"><span class="booster-icon booster-liquid"></span></span>
+              <span class="part-copy"><span class="kind">Liquid propellant · Blue model</span><h3>Liquid-Fuel Side Booster</h3><p>The Shuttle booster model recolored blue for the liquid-fuel variant.</p><span class="open-model">Inspect 3D model</span></span>
+            </a>
+            <a class="part-card" href="?component=hybrid-booster">
+              <span class="card-index">02.3</span><span class="art" aria-hidden="true"><span class="booster-icon booster-hybrid"></span></span>
+              <span class="part-copy"><span class="kind">Hybrid propellant · Orange model</span><h3>Hybrid Rocket Booster</h3><p>The same booster model recolored orange for the hybrid-propellant variant.</p><span class="open-model">Inspect 3D model</span></span>
+            </a>
+          </div>
+          <p class="model-note">All three booster views use the same isolated SRB mesh from the Challenger GLB; the liquid-fuel and hybrid variants are recolored blue and orange.</p>
+        </section>
+          <section class="category-section" id="engines" aria-labelledby="engine-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">03 / Engines · 20 variants</p>
+                <h2 id="engine-category-title">Engines</h2>
+              </div>
+              <p>Explore five engine families. Variants within each family share a model and use different colors; each 3D view includes its operating level, propellants, and vehicle role.</p>
+            </div>
+            <section class="engine-family" aria-labelledby="f1-family-title">
+              <h3 id="f1-family-title">F-1 family · Saturn V</h3>
+              <div class="cards">
+                <a class="part-card" href="?component=engine-f1">
+                  <span class="card-index">03.01</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#c87935"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Rocketdyne · F-1 base model</span><h3>F-1</h3><p>Color-coded variant of the Saturn V first-stage engine model.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-f1a">
+                  <span class="card-index">03.02</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#d8aa4f"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Rocketdyne · F-1 base model</span><h3>F-1A</h3><p>Same engine model as F-1, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+              </div>
+            </section>
+            <section class="engine-family" aria-labelledby="j2-family-title">
+              <h3 id="j2-family-title">J-2 family · upper stage</h3>
+              <div class="cards">
+                <a class="part-card" href="?component=engine-j2">
+                  <span class="card-index">03.03</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#3975aa"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Rocketdyne · J-2 base model</span><h3>J-2</h3><p>Color-coded variant of the detailed J-2 engine model.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-j2s">
+                  <span class="card-index">03.04</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#398e9c"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Rocketdyne · J-2 base model</span><h3>J-2S</h3><p>Same engine model as J-2, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-j2x">
+                  <span class="card-index">03.05</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#7463b5"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Rocketdyne · J-2 base model</span><h3>J-2X</h3><p>Same engine model as J-2, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+              </div>
+            </section>
+            <section class="engine-family" aria-labelledby="merlin-family-title">
+              <h3 id="merlin-family-title">Merlin family · Falcon</h3>
+              <div class="cards">
+                <a class="part-card" href="?component=engine-merlin-1a">
+                  <span class="card-index">03.06</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#3979aa"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin base model</span><h3>Merlin 1A</h3><p>Color-coded variant of the Falcon Merlin engine model.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-merlin-1b">
+                  <span class="card-index">03.07</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#4b91a9"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin base model</span><h3>Merlin 1B</h3><p>Same engine model as Merlin 1A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-merlin-1c">
+                  <span class="card-index">03.08</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#39866f"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin base model</span><h3>Merlin 1C</h3><p>Same engine model as Merlin 1A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-merlin-1c-vacuum">
+                  <span class="card-index">03.09</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#586db5"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin Vacuum model</span><h3>Merlin 1C Vacuum</h3><p>Vacuum-nozzle Merlin model, shown in its own variant color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-merlin-1d">
+                  <span class="card-index">03.10</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#287c9c"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin base model</span><h3>Merlin 1D</h3><p>Same engine model as Merlin 1A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-merlin-1d-vacuum">
+                  <span class="card-index">03.11</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#4e61a7"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">SpaceX · Merlin Vacuum model</span><h3>Merlin 1D Vacuum</h3><p>Vacuum-nozzle Merlin model, shown in its own variant color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+              </div>
+            </section>
+            <section class="engine-family" aria-labelledby="rs25-family-title">
+              <h3 id="rs25-family-title">RS-25 family · Shuttle / SLS</h3>
+              <div class="cards">
+                <a class="part-card" href="?component=engine-rs25-block-i">
+                  <span class="card-index">03.12</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#a9433b"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">RS-25 · Shared engine model</span><h3>RS-25 Block I</h3><p>Color-coded variant of the SLS RS-25 engine model.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rs25-block-ii">
+                  <span class="card-index">03.13</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#c55238"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">RS-25 · Shared engine model</span><h3>RS-25 Block II</h3><p>Same engine model as Block I, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rs25d">
+                  <span class="card-index">03.14</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#dc7544"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">RS-25 · Shared engine model</span><h3>RS-25D</h3><p>Same engine model as Block I, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rs25e">
+                  <span class="card-index">03.15</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#a63d58"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">RS-25 · Shared engine model</span><h3>RS-25E</h3><p>Same engine model as Block I, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+              </div>
+            </section>
+            <section class="engine-family" aria-labelledby="rl10-family-title">
+              <h3 id="rl10-family-title">RL10 family · upper stage</h3>
+              <div class="cards">
+                <a class="part-card" href="?component=engine-rl10a">
+                  <span class="card-index">03.16</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#4d70b4"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Aerojet Rocketdyne · RL10 base model</span><h3>RL10A</h3><p>Color-coded variant of the SLS RL10 engine model.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rl10b-2">
+                  <span class="card-index">03.17</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#577fbd"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Aerojet Rocketdyne · RL10 base model</span><h3>RL10B-2</h3><p>Same engine model as RL10A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rl10c-1">
+                  <span class="card-index">03.18</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#438d9a"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Aerojet Rocketdyne · RL10 base model</span><h3>RL10C-1</h3><p>Same engine model as RL10A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rl10c-2">
+                  <span class="card-index">03.19</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#6f6eb1"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Aerojet Rocketdyne · RL10 base model</span><h3>RL10C-2</h3><p>Same engine model as RL10A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+                <a class="part-card" href="?component=engine-rl10c-3">
+                  <span class="card-index">03.20</span><span class="art" aria-hidden="true"><span class="engine-icon" style="--engine-color:#398477"><span></span></span></span>
+                  <span class="part-copy"><span class="kind">Aerojet Rocketdyne · RL10 base model</span><h3>RL10C-3</h3><p>Same engine model as RL10A, shown in a different color.</p><span class="open-model">Inspect 3D model</span></span>
+                </a>
+              </div>
+            </section>
+          </section>
+          <section class="category-section" id="crewed-spacecraft" aria-labelledby="crew-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">04 / Crew capsules &amp; crewed spacecraft · 3 parts</p>
+                <h2 id="crew-category-title">Crew Capsules &amp; Crewed Spacecraft</h2>
+              </div>
+              <p>Inspect crewed spacecraft from Saturn V, SLS Block 1, and the Space Shuttle, using each vehicle explorer’s supplied model.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=apollo-spacecraft">
+                <span class="card-index">04.1</span><span class="art" aria-hidden="true"><span class="crew-icon crew-capsule crew-apollo"></span></span>
+                <span class="part-copy"><span class="kind">Saturn V · Command and Service Module</span><h3>Apollo Spacecraft</h3><p>The Apollo spacecraft and launch escape system from the Saturn V model.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+              <a class="part-card" href="?component=orion-spacecraft">
+                <span class="card-index">04.2</span><span class="art" aria-hidden="true"><span class="crew-icon crew-capsule crew-orion"></span></span>
+                <span class="part-copy"><span class="kind">SLS Block 1 · Orion</span><h3>Orion Spacecraft</h3><p>The supplied Orion spacecraft model for the SLS crew configuration.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+              <a class="part-card" href="?component=space-shuttle-orbiter">
+                <span class="card-index">04.3</span><span class="art" aria-hidden="true"><span class="crew-icon crew-orbiter"></span></span>
+                <span class="part-copy"><span class="kind">Space Shuttle · Winged spacecraft</span><h3>Orbiter</h3><p>The Shuttle orbiter isolated from the external tank and solid rocket boosters.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+            </div>
+          </section>
+          <section class="category-section" id="fairings" aria-labelledby="fairing-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">05 / Payload protection · 1 component</p>
+                <h2 id="fairing-category-title">Fairing</h2>
+              </div>
+              <p>Inspect the Falcon 9 payload fairing as one assembled shell, then separate its clamshell halves to see how they open around a payload.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=payload-fairing">
+                <span class="card-index">05.1</span><span class="art" aria-hidden="true"><span class="fairing-icon"></span></span>
+                <span class="part-copy"><span class="kind">Falcon 9 · Payload protection</span><h3>Payload Fairing</h3><p>The outer shell protects a satellite or spacecraft during launch and separates to expose the payload.</p><span class="open-model">Inspect assembly and halves</span></span>
+              </a>
+            </div>
+          </section>
+          <section class="category-section" id="landing-recovery" aria-labelledby="landing-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">06 / Recovery · 1 component</p>
+                <h2 id="landing-category-title">Landing &amp; Recovery</h2>
+              </div>
+              <p>Inspect the Falcon 9 first-stage landing-leg structure in isolation.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=landing-legs">
+                <span class="card-index">06.1</span><span class="art" aria-hidden="true"><span class="landing-icon"><i></i><i></i><i></i><i></i></span></span>
+                <span class="part-copy"><span class="kind">Falcon 9 · Stage 1 recovery</span><h3>Landing Legs</h3><p>Four deployable legs support the first stage during vertical touchdown.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+            </div>
+          </section>
+          <section class="category-section" id="safety-abort-systems" aria-labelledby="abort-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">07 / Crew safety · 1 system</p>
+                <h2 id="abort-category-title">Safety / Abort Systems</h2>
+              </div>
+              <p>Inspect the Saturn V Launch Abort System, isolated from the Apollo spacecraft model.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=launch-abort-system">
+                <span class="card-index">07.1</span><span class="art" aria-hidden="true"><span class="abort-icon"></span></span>
+                <span class="part-copy"><span class="kind">Saturn V · Apollo crew safety</span><h3>Launch Abort System</h3><p>The tower-mounted system that could pull the Apollo crew module clear in an emergency.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+            </div>
+          </section>
+          <section class="category-section" id="satellite" aria-labelledby="satellite-category-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">08 / Spacecraft payload · 1 model</p>
+                <h2 id="satellite-category-title">Satellite</h2>
+              </div>
+              <p>Rotate and inspect the supplied satellite model in the interactive 3D viewer.</p>
+            </div>
+            <div class="cards">
+              <a class="part-card" href="?component=satellite">
+                <span class="card-index">08.1</span><span class="art" aria-hidden="true"><span class="satellite-icon"><i></i><i></i></span></span>
+                <span class="part-copy"><span class="kind">Supplied GLB · Satellite</span><h3>Satellite</h3><p>Open the provided satellite model and rotate it to inspect the spacecraft from every side.</p><span class="open-model">Inspect 3D model</span></span>
+              </a>
+            </div>
+          </section>
+      </section>
+    </main>
+    <footer><div class="wrap">Engine models reuse the Saturn V F-1/J-2 assets, Falcon 9 Merlin geometry, and SLS RS-25/RL10 geometry. Falcon 9 fairing and landing-leg models reuse the source explorer's procedural geometry; the Apollo Launch Abort System reuses its Saturn V model node. Crew spacecraft reuse Apollo nodes, the supplied Orion GLB, and the Shuttle Orbiter groups. Satellite uses <code>assets/space_satellite.glb</code>. Shuttle models use <code>assets/space-shuttle-challenger/source/Challenger.glb</code> and Orion uses <code>assets/orion_spacecraft.glb</code>.</div></footer>
+  </div>
+
+  <main id="viewer-page">
+    <div class="wrap">
+      <header class="viewer-top">
+        <a class="brand" href="./index.html">ORBITAL <span>ATLAS</span></a>
+        <a class="back-link" href="./CustomizedComponents.html">← Back to component categories</a>
+      </header>
+      <section class="viewer-intro">
+        <p class="eyebrow" id="viewer-kicker">Fuel Tanks / Component view</p>
+        <h1 id="viewer-title">Loading component…</h1>
+        <p id="viewer-description">Loading 3D model.</p>
+        <p id="viewer-specifications" hidden></p>
+      </section>
+      <div class="viewer-shell">
+        <canvas id="model-canvas" aria-label="Interactive three-dimensional rocket component model"></canvas>
+        <div class="viewer-status" id="viewer-status" role="status">Preparing 3D model…</div>
+      </div>
+      <div class="viewer-controls">
+        <button id="fairing-assembly-button" type="button" hidden>Assembled fairing</button>
+        <button id="fairing-halves-button" class="primary" type="button" hidden>Separated halves</button>
+        <button class="primary" id="reset-button" type="button">Reset camera</button>
+      </div>
+    </div>
+  </main>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const saturnModelUrl = 'https://tianmin435.github.io/s1203roc/assets/saturn-v/source/SaturnV.glb';
+    const tankComponents = {
+      'five-engine': {
+        title: 'Five-Engine Fuel Tank', engines: 5, radius: 1.16, barrelHeight: 4.7,
+        description: 'The widest and tallest modular cylinder in the family, sized for a five-engine game setup.'
+      },
+      'four-engine': {
+        title: 'Four-Engine Fuel Tank', engines: 4, radius: 1.04, barrelHeight: 4.25,
+        description: 'A mid-size modular cylinder for a four-engine game setup.'
+      },
+      'three-engine': {
+        title: 'Three-Engine Fuel Tank', engines: 3, radius: 0.92, barrelHeight: 3.8,
+        description: 'A compact-width modular cylinder for a three-engine game setup.'
+      },
+      'two-engine': {
+        title: 'Two-Engine Fuel Tank', engines: 2, radius: 0.8, barrelHeight: 3.35,
+        description: 'The smallest modular cylinder in the family, for a two-engine game setup.'
+      }
+    };
+    const engineFamilies = {
+      f1: {
+        name: 'F-1 family',
+        model: 'saturn-f1',
+        specifications: '(Sea-level, LOX/RP-1, Saturn V first stage)',
+        description: 'The F-1 engine assembly from the Saturn V first-stage model, recolored for this variant.'
+      },
+      j2: {
+        name: 'J-2 family',
+        model: 'j2',
+        specifications: '(Vacuum, LOX/LH2, upper-stage engine)',
+        description: 'The detailed J-2 engine model, recolored for this variant.'
+      },
+      merlin: {
+        name: 'Merlin family',
+        model: 'merlin',
+        specifications: '(LOX/RP-1, Falcon family)',
+        description: 'The Falcon Merlin engine model, recolored for this variant.'
+      },
+      rs25: {
+        name: 'RS-25 family',
+        model: 'sls-rs25',
+        specifications: '(LOX/LH2, Space Shuttle / SLS core stage)',
+        description: 'The SLS RS-25 engine model, recolored for this variant.'
+      },
+      rl10: {
+        name: 'RL10 family',
+        model: 'sls-rl10',
+        specifications: '(Vacuum, LOX/LH2, upper-stage engine)',
+        description: 'The SLS RL10 engine model, recolored for this variant.'
+      }
+    };
+    const engineVariants = [
+      { id: 'engine-f1', title: 'F-1', family: 'f1', color: 0xc87935 },
+      { id: 'engine-f1a', title: 'F-1A', family: 'f1', color: 0xd8aa4f },
+      { id: 'engine-j2', title: 'J-2', family: 'j2', color: 0x3975aa },
+      { id: 'engine-j2s', title: 'J-2S', family: 'j2', color: 0x398e9c },
+      { id: 'engine-j2x', title: 'J-2X', family: 'j2', color: 0x7463b5 },
+      { id: 'engine-merlin-1a', title: 'Merlin 1A', family: 'merlin', color: 0x3979aa },
+      { id: 'engine-merlin-1b', title: 'Merlin 1B', family: 'merlin', color: 0x4b91a9 },
+      { id: 'engine-merlin-1c', title: 'Merlin 1C', family: 'merlin', color: 0x39866f },
+      { id: 'engine-merlin-1c-vacuum', title: 'Merlin 1C Vacuum', family: 'merlin', vacuum: true, color: 0x586db5 },
+      { id: 'engine-merlin-1d', title: 'Merlin 1D', family: 'merlin', color: 0x287c9c },
+      { id: 'engine-merlin-1d-vacuum', title: 'Merlin 1D Vacuum', family: 'merlin', vacuum: true, color: 0x4e61a7 },
+      { id: 'engine-rs25-block-i', title: 'RS-25 Block I', family: 'rs25', color: 0xa9433b },
+      { id: 'engine-rs25-block-ii', title: 'RS-25 Block II', family: 'rs25', color: 0xc55238 },
+      { id: 'engine-rs25d', title: 'RS-25D', family: 'rs25', color: 0xdc7544 },
+      { id: 'engine-rs25e', title: 'RS-25E', family: 'rs25', color: 0xa63d58 },
+      { id: 'engine-rl10a', title: 'RL10A', family: 'rl10', color: 0x4d70b4 },
+      { id: 'engine-rl10b-2', title: 'RL10B-2', family: 'rl10', color: 0x577fbd },
+      { id: 'engine-rl10c-1', title: 'RL10C-1', family: 'rl10', color: 0x438d9a },
+      { id: 'engine-rl10c-2', title: 'RL10C-2', family: 'rl10', color: 0x6f6eb1 },
+      { id: 'engine-rl10c-3', title: 'RL10C-3', family: 'rl10', color: 0x398477 }
+    ];
+    const engineComponents = Object.fromEntries(engineVariants.map(variant => {
+      const family = engineFamilies[variant.family];
+      return [variant.id, {
+        ...variant,
+        engine: true,
+        model: family.model,
+        kicker: `Engines / ${family.name}`,
+        description: family.description,
+        specifications: family.specifications
+      }];
+    }));
+    const components = {
+      ...Object.fromEntries(Object.entries(tankComponents).map(([id, tank]) => [id, {
+        ...tank,
+        kicker: `Fuel tanks / ${tank.engines}-engine configuration`,
+        procedural: 'tank'
+      }])),
+      'external-tank': {
+        title: 'External Tank',
+        kicker: 'Space Shuttle / Propellant tank',
+        description: 'The separate external-tank geometry from the supplied Challenger GLB.',
+        materialRoot: 'et_all',
+        materials: ['et all'],
+        materialPrefixes: ['et_']
+      },
+      srb: {
+        title: 'Solid Rocket Booster (SRB)',
+        kicker: 'Boosters / Solid propellant · Challenger',
+        description: 'One solid rocket booster isolated from the paired “srb all” geometry in the supplied Challenger GLB.',
+        materialRoot: 'et_all',
+        materials: ['srb all'],
+        singleBooster: true,
+        selectionMessage: 'Solid rocket booster isolated · drag to rotate'
+      },
+      'liquid-side-booster': {
+        title: 'Liquid-Fuel Side Booster',
+        kicker: 'Boosters / Liquid propellant · blue model',
+        description: 'The Shuttle booster model recolored blue to distinguish this liquid-fuel variant.',
+        materialRoot: 'et_all',
+        materials: ['srb all'],
+        singleBooster: true,
+        boosterColor: 0x3489bd,
+        selectionMessage: 'Liquid-fuel booster · blue model · drag to rotate'
+      },
+      'hybrid-booster': {
+        title: 'Hybrid Rocket Booster',
+        kicker: 'Boosters / Hybrid propellant · orange model',
+        description: 'The Shuttle booster model recolored orange to distinguish this hybrid-propellant variant.',
+        materialRoot: 'et_all',
+        materials: ['srb all'],
+        singleBooster: true,
+        boosterColor: 0xc85e32,
+        selectionMessage: 'Hybrid booster · orange model · drag to rotate'
+      },
+      ...engineComponents,
+      'payload-fairing': {
+        title: 'Payload Fairing',
+        kicker: 'Fairing / Falcon 9 payload protection',
+        description: 'The Falcon 9 payload fairing shown as an assembled outer shell or as its two separated clamshell halves.',
+        procedural: 'fairing',
+        selectionMessage: 'Payload fairing halves separated · drag to rotate'
+      },
+      'landing-legs': {
+        title: 'Landing Legs',
+        kicker: 'Landing & Recovery / Falcon 9 first stage',
+        description: 'The four Falcon 9 first-stage landing legs, isolated from the booster.',
+        procedural: 'landing-legs',
+        selectionMessage: 'Four landing legs isolated · drag to rotate'
+      },
+      'launch-abort-system': {
+        title: 'Launch Abort System',
+        kicker: 'Safety / Abort Systems · Saturn V',
+        description: 'The Apollo launch escape tower isolated from the Saturn V model.',
+        abortSystem: true,
+        node: 'Launch_Escape_System_53',
+        selectionMessage: 'Launch Abort System isolated · drag to rotate'
+      },
+      satellite: {
+        title: 'Satellite',
+        kicker: 'Satellite / Supplied spacecraft model',
+        description: 'The supplied satellite GLB, centered and scaled for the interactive viewer.',
+        satelliteModel: true,
+        selectionMessage: 'Satellite model loaded · drag to rotate'
+      },
+      'apollo-spacecraft': {
+        title: 'Apollo Spacecraft',
+        kicker: 'Saturn V / Command and Service Module',
+        description: 'The Apollo spacecraft and launch escape system from the supplied Saturn V model.',
+        crewModel: 'apollo',
+        nodes: ['Apollo_Capsule_and_SM_14', 'Launch_Escape_System_53'],
+        selectionMessage: 'Apollo spacecraft isolated · drag to rotate'
+      },
+      'orion-spacecraft': {
+        title: 'Orion Spacecraft',
+        kicker: 'SLS Block 1 / Crewed spacecraft',
+        description: 'The supplied Orion spacecraft model, normalized and isolated from the SLS Block 1 source.',
+        crewModel: 'orion',
+        selectionMessage: 'Orion spacecraft · drag to rotate'
+      },
+      'space-shuttle-orbiter': {
+        title: 'Orbiter',
+        kicker: 'Space Shuttle / Winged spacecraft',
+        description: 'The Shuttle Orbiter isolated from the external tank and solid rocket booster geometry.',
+        crewModel: 'orbiter',
+        materialRoot: 'et_all',
+        includeAllMaterials: true,
+        excludeMaterials: ['et all', 'srb all'],
+        excludeMaterialPrefixes: ['et_'],
+        cameraView: 'orbiter',
+        selectionMessage: 'Space Shuttle Orbiter isolated · drag to rotate'
+      }
+    };
+
+    const selected = components[new URLSearchParams(location.search).get('component')];
+    if (selected) {
+      document.querySelector('#catalog-page').hidden = true;
+      document.querySelector('#viewer-page').style.display = 'block';
+      document.title = `${selected.title} | Components' Categories — Orbital Atlas`;
+      document.querySelector('#viewer-title').textContent = selected.title;
+      document.querySelector('#viewer-kicker').textContent = selected.kicker;
+      document.querySelector('#viewer-description').textContent = selected.description;
+      if (selected.specifications) {
+        const specifications = document.querySelector('#viewer-specifications');
+        specifications.textContent = selected.specifications;
+        specifications.hidden = false;
+      }
+      startViewer(selected);
+    }
+
+    function startViewer(component) {
+      const canvas = document.querySelector('#model-canvas');
+      const status = document.querySelector('#viewer-status');
+      const fairingAssemblyButton = document.querySelector('#fairing-assembly-button');
+      const fairingHalvesButton = document.querySelector('#fairing-halves-button');
+      const hasFairingControls = component.procedural === 'fairing';
+      fairingAssemblyButton.hidden = !hasFairingControls;
+      fairingHalvesButton.hidden = !hasFairingControls;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x12140f);
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 10000);
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      const studioEnvironment = new RoomEnvironment(renderer);
+      scene.environment = pmremGenerator.fromScene(studioEnvironment, 0.04).texture;
+      studioEnvironment.dispose();
+      pmremGenerator.dispose();
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      scene.add(new THREE.HemisphereLight(0xdce7f0, 0x383125, 2.2));
+      const keyLight = new THREE.DirectionalLight(0xffe6bd, 3.2);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.bias = -0.0001;
+      keyLight.shadow.radius = 5;
+      scene.add(keyLight);
+      const fillLight = new THREE.DirectionalLight(0x8db7e2, 1.6);
+      scene.add(fillLight);
+      let modelRoot = null;
+      let componentBounds = null;
+      let fairingHalves = null;
+
+      function resize() {
+        const bounds = canvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        camera.aspect = bounds.width / bounds.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(bounds.width, bounds.height, false);
+      }
+
+      function getVisibleBounds(root) {
+        const bounds = new THREE.Box3();
+        root.updateMatrixWorld(true);
+        root.traverse(node => {
+          if (!node.visible || !node.isMesh || !node.geometry) return;
+          if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+          if (node.geometry.boundingBox) bounds.union(node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld));
+        });
+        return bounds;
+      }
+
+      function focusOnBounds(bounds) {
+        if (bounds.isEmpty()) {
+          status.textContent = 'No visible model geometry is available for this view.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const size = bounds.getSize(new THREE.Vector3());
+        const maxSize = Math.max(size.x, size.y, size.z);
+        const distance = Math.max(maxSize * 1.35, 2);
+        if (component.cameraView === 'orbiter') {
+          camera.up.set(1, 0, 0);
+          camera.position.set(center.x, center.y, center.z + distance * 1.45);
+        } else {
+          camera.up.set(0, 1, 0);
+          camera.position.set(center.x + distance * 0.8, center.y + distance * 0.55, center.z + distance * 1.25);
+        }
+        camera.near = Math.max(distance / 1000, 0.01);
+        camera.far = Math.max(distance * 30, 100);
+        camera.updateProjectionMatrix();
+        controls.target.copy(center);
+        controls.minDistance = Math.max(maxSize * 0.2, 0.5);
+        controls.maxDistance = Math.max(maxSize * 8, 20);
+        controls.update();
+      }
+
+      function setFairingPose(separated) {
+        if (!fairingHalves || !modelRoot) return;
+        fairingHalves[0].position.x = separated ? -0.65 : 0;
+        fairingHalves[1].position.x = separated ? 0.65 : 0;
+        fairingHalves[0].rotation.z = separated ? 0.045 : 0;
+        fairingHalves[1].rotation.z = separated ? -0.045 : 0;
+        fairingAssemblyButton.classList.toggle('primary', !separated);
+        fairingHalvesButton.classList.toggle('primary', separated);
+        componentBounds = getVisibleBounds(modelRoot);
+        focusOnBounds(componentBounds);
+        status.textContent = separated
+          ? 'Payload fairing halves separated · drag to rotate'
+          : 'Payload fairing assembled · drag to rotate';
+      }
+
+      function addFairingHelpers() {
+        function rod(parent, start, end, radius, material) {
+          const a = new THREE.Vector3(start[0], start[1], start[2]);
+          const b = new THREE.Vector3(end[0], end[1], end[2]);
+          const direction = b.clone().sub(a);
+          const mesh = new THREE.Mesh(
+            new THREE.CylinderGeometry(radius * 0.8, radius, direction.length(), 12),
+            material
+          );
+          mesh.position.copy(a.add(b).multiplyScalar(0.5));
+          mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+          mesh.castShadow = true;
+          parent.add(mesh);
+          return mesh;
+        }
+
+        function tube(parent, points, radius, material, segments = 36) {
+          const curve = new THREE.CatmullRomCurve3(points.map(point => new THREE.Vector3(...point)));
+          const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, segments, radius, 8, false), material);
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          parent.add(mesh);
+          return mesh;
+        }
+
+        function lathe(parent, profile, material, segments = 64, start = 0, length = Math.PI * 2) {
+          const mesh = new THREE.Mesh(
+            new THREE.LatheGeometry(profile.map(point => new THREE.Vector2(point[0], point[1])), segments, start, length),
+            material
+          );
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+          parent.add(mesh);
+          return mesh;
+        }
+
+        return { rod, tube, lathe };
+      }
+
+      function createFairingMaterials() {
+        const source = document.createElement('canvas');
+        source.width = 1024;
+        source.height = 2048;
+        const context = source.getContext('2d');
+        if (!context) throw new Error('Unable to create the payload-fairing surface texture.');
+        const finish = context.createLinearGradient(0, 0, source.width, 0);
+        finish.addColorStop(0, '#d4d5d4');
+        finish.addColorStop(0.18, '#f4f4f1');
+        finish.addColorStop(0.52, '#e8e9e7');
+        finish.addColorStop(0.82, '#f0f0ed');
+        finish.addColorStop(1, '#d2d4d3');
+        context.fillStyle = finish;
+        context.fillRect(0, 0, source.width, source.height);
+        context.globalAlpha = 0.13;
+        context.strokeStyle = '#777d80';
+        context.lineWidth = 2;
+        for (let x = 0; x < source.width; x += 128) {
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x, source.height);
+          context.stroke();
+        }
+        context.globalAlpha = 0.09;
+        context.lineWidth = 3;
+        for (let y = 256; y < source.height; y += 512) {
+          context.beginPath();
+          context.moveTo(0, y);
+          context.lineTo(source.width, y);
+          context.stroke();
+        }
+        context.globalAlpha = 0.08;
+        context.strokeStyle = '#ffffff';
+        context.lineWidth = 1;
+        for (let x = -source.height; x < source.width; x += 22) {
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x + source.height, source.height);
+          context.stroke();
+        }
+        context.globalAlpha = 1;
+        const texture = new THREE.CanvasTexture(source);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        return {
+          fairingSkin: new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            map: texture,
+            metalness: 0.2,
+            roughness: 0.31,
+            clearcoat: 0.38,
+            clearcoatRoughness: 0.24,
+            side: THREE.DoubleSide
+          }),
+          fairingInner: new THREE.MeshStandardMaterial({
+            color: 0x25292c,
+            metalness: 0.48,
+            roughness: 0.62,
+            side: THREE.DoubleSide
+          }),
+          whiteShade: new THREE.MeshStandardMaterial({ color: 0xcac9c1, metalness: 0.12, roughness: 0.52 }),
+          engineDark: new THREE.MeshPhysicalMaterial({ color: 0x333a3e, metalness: 0.88, roughness: 0.32 }),
+          engineMetal: new THREE.MeshPhysicalMaterial({ color: 0xa9b1b5, metalness: 0.94, roughness: 0.24, clearcoat: 0.4 })
+        };
+      }
+
+      function addFairingModel() {
+        const { tube, lathe } = addFairingHelpers();
+        const materials = createFairingMaterials();
+        const profile = [
+          [1.83, 56.9], [2.08, 57.2], [2.36, 57.7], [2.56, 58.3],
+          [2.6, 58.9], [2.6, 65.0], [2.58, 65.4], [2.51, 65.8],
+          [2.38, 66.2], [2.18, 66.6], [1.9, 67.0], [1.58, 67.4],
+          [1.25, 67.8], [0.92, 68.2], [0.62, 68.6], [0.36, 69.0],
+          [0.15, 69.45], [0.035, 69.85], [0, 70]
+        ];
+        const innerProfile = profile.map(([radius, y]) => [radius > 0.06 ? radius - 0.055 : 0, y]);
+        function radiusAt(height) {
+          for (let index = 1; index < profile.length; index += 1) {
+            if (profile[index][1] >= height) {
+              const previous = profile[index - 1];
+              const next = profile[index];
+              const amount = (height - previous[1]) / (next[1] - previous[1]);
+              return THREE.MathUtils.lerp(previous[0], next[0], amount);
+            }
+          }
+          return 0;
+        }
+
+        const root = new THREE.Group();
+        root.name = 'Falcon 9 payload fairing';
+        const halves = [];
+        for (let index = 0; index < 2; index += 1) {
+          const half = new THREE.Group();
+          root.add(half);
+          const start = index * Math.PI;
+          lathe(half, profile, materials.fairingSkin, 96, start, Math.PI);
+          lathe(half, innerProfile, materials.fairingInner, 72, start, Math.PI);
+
+          function halfArc(radius, y, thickness, material) {
+            const points = [];
+            for (let step = 0; step <= 32; step += 1) {
+              const angle = start + step / 32 * Math.PI;
+              points.push([Math.sin(angle) * radius, y, Math.cos(angle) * radius]);
+            }
+            tube(half, points, thickness, material, 64);
+          }
+          for (const [radius, y] of [[1.87, 56.98], [2.63, 58.95], [2.61, 64.98], [2.56, 65.55], [2.43, 66.05]]) {
+            halfArc(radius, y, y < 59 ? 0.055 : 0.014, y < 59 ? materials.engineDark : materials.whiteShade);
+          }
+          for (const angle of [start, start + Math.PI]) {
+            const edge = profile.map(([radius, y]) => [
+              Math.sin(angle) * (radius + 0.018),
+              y,
+              Math.cos(angle) * (radius + 0.018)
+            ]);
+            tube(half, edge, 0.025, materials.engineDark, 80);
+            const innerEdge = innerProfile.map(([radius, y]) => [
+              Math.sin(angle) * radius,
+              y,
+              Math.cos(angle) * radius
+            ]);
+            tube(half, innerEdge, 0.032, materials.engineMetal, 80);
+          }
+          for (let rib = 1; rib <= 3; rib += 1) {
+            const angle = start + Math.PI * rib / 4;
+            const points = profile.map(([radius, y]) => [
+              Math.sin(angle) * (radius - 0.025),
+              y,
+              Math.cos(angle) * (radius - 0.025)
+            ]);
+            tube(half, points, 0.016, materials.engineDark, 80);
+          }
+          for (let bolt = 0; bolt < 16; bolt += 1) {
+            const angle = start + (bolt + 0.5) * Math.PI / 16;
+            const rivet = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), materials.engineMetal);
+            rivet.position.set(Math.sin(angle) * 2.63, 59.08, Math.cos(angle) * 2.63);
+            rivet.castShadow = true;
+            half.add(rivet);
+          }
+          for (let latch = 0; latch < 4; latch += 1) {
+            const y = 57.45 + latch * 1.08;
+            const radius = radiusAt(y);
+            for (const angle of [start, start + Math.PI]) {
+              const clasp = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.24, 0.1), materials.engineMetal);
+              clasp.position.set(Math.sin(angle) * (radius + 0.045), y, Math.cos(angle) * (radius + 0.045));
+              clasp.rotation.y = -angle;
+              clasp.castShadow = true;
+              half.add(clasp);
+            }
+          }
+          halves.push(half);
+        }
+        fairingHalves = halves;
+        scene.add(root);
+        finishModel(root);
+        setFairingPose(true);
+      }
+
+      function addLandingLegsModel() {
+        const { rod } = addFairingHelpers();
+        const materials = {
+          steel: new THREE.MeshStandardMaterial({ color: 0x9ca5a8, metalness: 0.8, roughness: 0.3 }),
+          darkSteel: new THREE.MeshStandardMaterial({ color: 0x525b60, metalness: 0.82, roughness: 0.34 })
+        };
+        const legs = new THREE.Group();
+        legs.name = 'Falcon 9 landing legs';
+        for (let index = 0; index < 4; index += 1) {
+          const angle = Math.PI / 4 + index * Math.PI / 2;
+          const dx = Math.cos(angle);
+          const dz = Math.sin(angle);
+          rod(legs, [dx * 1.58, 4.6, dz * 1.58], [dx * 2.62, 1.0, dz * 2.62], 0.115, materials.steel);
+          rod(legs, [dx * 1.62, 2.9, dz * 1.62], [dx * 2.62, 1.0, dz * 2.62], 0.07, materials.darkSteel);
+          rod(legs, [dx * 2.62, 1.0, dz * 2.62], [dx * 3.05, 0.18, dz * 3.05], 0.09, materials.steel);
+          rod(legs, [dx * 2.88, 0.16, dz * 2.88], [dx * 3.28, 0.16, dz * 3.28], 0.11, materials.darkSteel);
+        }
+        scene.add(legs);
+        finishModel(legs);
+      }
+
+      function addTankMesh() {
+        const { radius, barrelHeight } = component;
+        const halfBarrel = barrelHeight / 2;
+        const tank = new THREE.Group();
+        tank.name = component.title;
+        const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xd4d5d0, metalness: 0.68, roughness: 0.3 });
+        const bandMaterial = new THREE.MeshStandardMaterial({ color: 0x9d804d, metalness: 0.76, roughness: 0.28 });
+        const structureMaterial = new THREE.MeshStandardMaterial({ color: 0x686c68, metalness: 0.62, roughness: 0.38 });
+        const shell = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, barrelHeight, 96, 1, false), bodyMaterial);
+        shell.castShadow = true;
+        shell.receiveShadow = true;
+        tank.add(shell);
+        for (const y of [-halfBarrel * 0.86, -halfBarrel * 0.78, halfBarrel * 0.78, halfBarrel * 0.86]) {
+          const band = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.005, radius * 0.018, 10, 96), bandMaterial);
+          band.rotation.x = Math.PI / 2;
+          band.position.y = y;
+          band.castShadow = true;
+          tank.add(band);
+        }
+        const seam = new THREE.Mesh(
+          new THREE.TorusGeometry(radius * 1.003, radius * 0.009, 8, 96),
+          structureMaterial
+        );
+        seam.rotation.x = Math.PI / 2;
+        seam.position.y = 0;
+        tank.add(seam);
+        for (let index = 0; index < 4; index += 1) {
+          const angle = index * Math.PI / 2 + Math.PI / 4;
+          const line = new THREE.Mesh(
+            new THREE.CylinderGeometry(radius * 0.012, radius * 0.012, barrelHeight * 0.84, 8),
+            structureMaterial
+          );
+          line.position.set(Math.sin(angle) * radius * 0.987, 0, Math.cos(angle) * radius * 0.987);
+          line.castShadow = true;
+          tank.add(line);
+        }
+        scene.add(tank);
+        finishModel(tank);
+      }
+
+      function getMeshesWithMaterials(root, materialNames = [], materialPrefixes = [], excludedNames = [], excludedPrefixes = [], includeAll = false) {
+        const wanted = new Set(materialNames.map(name => name.toLowerCase()));
+        const prefixes = materialPrefixes.map(prefix => prefix.toLowerCase());
+        const excluded = new Set(excludedNames.map(name => name.toLowerCase()));
+        const excludedStartsWith = excludedPrefixes.map(prefix => prefix.toLowerCase());
+        const matches = [];
+        root.traverse(node => {
+          if (!node.isMesh) return;
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          if (materials.some(material => {
+            const name = (material.name || '').toLowerCase();
+            const isExcluded = excluded.has(name) || excludedStartsWith.some(prefix => name.startsWith(prefix));
+            return !isExcluded && (includeAll || wanted.has(name) || prefixes.some(prefix => name.startsWith(prefix)));
+          })) matches.push(node);
+        });
+        return matches;
+      }
+
+      function createSingleBoosterMesh(source) {
+        const sourceGeometry = source.geometry;
+        const position = sourceGeometry.getAttribute('position');
+        const index = sourceGeometry.getIndex();
+        const vertexCount = index ? index.count : position.count;
+        const vertices = [];
+        for (let offset = 0; offset + 2 < vertexCount; offset += 3) {
+          const a = index ? index.getX(offset) : offset;
+          const b = index ? index.getX(offset + 1) : offset + 1;
+          const c = index ? index.getX(offset + 2) : offset + 2;
+          const centerY = (position.getY(a) + position.getY(b) + position.getY(c)) / 3;
+          if (centerY > 0) vertices.push(a, b, c);
+        }
+        if (!vertices.length) return null;
+
+        const geometry = new THREE.BufferGeometry();
+        for (const name of Object.keys(sourceGeometry.attributes)) {
+          const attribute = sourceGeometry.getAttribute(name);
+          const values = new attribute.array.constructor(vertices.length * attribute.itemSize);
+          let cursor = 0;
+          for (const vertex of vertices) {
+            const start = vertex * attribute.itemSize;
+            values.set(attribute.array.subarray(start, start + attribute.itemSize), cursor);
+            cursor += attribute.itemSize;
+          }
+          geometry.setAttribute(name, new THREE.BufferAttribute(values, attribute.itemSize, attribute.normalized));
+        }
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
+        const single = source.clone();
+        single.name = 'Single side booster';
+        single.geometry = geometry;
+        return single;
+      }
+
+      function revealNode(node) {
+        let current = node;
+        while (current) {
+          current.visible = true;
+          current = current.parent;
+        }
+        node.traverse(child => { child.visible = true; });
+      }
+
+      function recolorModel(root, color) {
+        root.traverse(node => {
+          if (!node.isMesh) return;
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          const recolored = materials.map(material => {
+            const clone = material.clone();
+            if (clone.color) clone.color.setHex(color);
+            return clone;
+          });
+          node.material = Array.isArray(node.material) ? recolored : recolored[0];
+        });
+      }
+
+      function engineCylinder(parent, radiusTop, radiusBottom, height, y, material, segments = 40) {
+        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments), material);
+        mesh.position.y = y;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function engineRing(parent, radius, y, tubeRadius, material) {
+        const mesh = new THREE.Mesh(new THREE.TorusGeometry(radius, tubeRadius, 8, 48), material);
+        mesh.rotation.x = Math.PI / 2;
+        mesh.position.y = y;
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function engineRod(parent, start, end, radius, material) {
+        const a = new THREE.Vector3(start[0], start[1], start[2]);
+        const b = new THREE.Vector3(end[0], end[1], end[2]);
+        const direction = b.clone().sub(a);
+        const mesh = new THREE.Mesh(
+          new THREE.CylinderGeometry(radius * 0.8, radius, direction.length(), 12),
+          material
+        );
+        mesh.position.copy(a.add(b).multiplyScalar(0.5));
+        mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+        mesh.castShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function engineTube(parent, points, radius, material, segments = 36) {
+        const curve = new THREE.CatmullRomCurve3(points.map(point => new THREE.Vector3(...point)));
+        const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, segments, radius, 8, false), material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function engineLathe(parent, profile, material, segments = 64) {
+        const mesh = new THREE.Mesh(
+          new THREE.LatheGeometry(profile.map(point => new THREE.Vector2(point[0], point[1])), segments),
+          material
+        );
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      function createMerlinMaterials(color) {
+        return {
+          engineMetal: new THREE.MeshPhysicalMaterial({ color, metalness: 0.94, roughness: 0.24, clearcoat: 0.4 }),
+          engineDark: new THREE.MeshPhysicalMaterial({ color: 0x333a3e, metalness: 0.88, roughness: 0.32 }),
+          engineHot: new THREE.MeshStandardMaterial({ color: 0x684d3e, metalness: 0.82, roughness: 0.3, side: THREE.DoubleSide }),
+          nozzleInterior: new THREE.MeshStandardMaterial({ color: 0x111416, metalness: 0.66, roughness: 0.46, side: THREE.DoubleSide }),
+          gold: new THREE.MeshStandardMaterial({ color: 0xb88b42, metalness: 0.68, roughness: 0.38 })
+        };
+      }
+
+      function buildMerlin(parent, x, z, baseY, scale, vacuum, materials) {
+        const engine = new THREE.Group();
+        engine.position.set(x, baseY, z);
+        engine.scale.set(scale, scale * (vacuum ? 0.8 : 1), scale);
+        parent.add(engine);
+
+        const exitRadius = vacuum ? 0.62 : 0.43;
+        const throatRadius = vacuum ? 0.17 : 0.14;
+        const bellHeight = vacuum ? 1.72 : 1.34;
+        const profile = [
+          [exitRadius, 0], [exitRadius * 0.98, 0.055], [exitRadius * 0.88, 0.17],
+          [exitRadius * 0.73, bellHeight * 0.34], [exitRadius * 0.55, bellHeight * 0.56],
+          [exitRadius * 0.38, bellHeight * 0.75], [throatRadius * 1.28, bellHeight * 0.91],
+          [throatRadius, bellHeight], [throatRadius * 0.84, bellHeight - 0.07],
+          [throatRadius * 1.13, bellHeight * 0.82], [exitRadius * 0.43, bellHeight * 0.58],
+          [exitRadius * 0.63, bellHeight * 0.34], [exitRadius * 0.82, 0.16], [exitRadius * 0.9, 0.09]
+        ];
+        engineLathe(engine, profile, materials.engineMetal, 48);
+        const innerWall = profile.slice(0, 8).reverse().map(([radius, y]) => [Math.max(radius - 0.035, 0.055), y + 0.015]);
+        engineLathe(engine, innerWall, materials.nozzleInterior, 40);
+        engineRing(engine, exitRadius * 0.97, 0.055, vacuum ? 0.045 : 0.028, materials.engineDark);
+        engineRing(engine, throatRadius * 1.2, bellHeight * 0.92, 0.022, materials.engineHot);
+
+        const ribs = vacuum ? 22 : 14;
+        for (let index = 1; index < ribs; index += 1) {
+          const progress = index / ribs;
+          const y = bellHeight * progress;
+          const radius = exitRadius - (exitRadius - throatRadius) * Math.pow(progress, 0.78);
+          engineRing(engine, radius, y, vacuum ? 0.014 : 0.011, index % 4 === 0 ? materials.engineDark : materials.engineMetal);
+        }
+
+        engineCylinder(engine, vacuum ? 0.27 : 0.24, vacuum ? 0.31 : 0.28, 0.32, bellHeight + 0.15, materials.engineDark, 32);
+        engineCylinder(engine, vacuum ? 0.23 : 0.21, vacuum ? 0.28 : 0.25, 0.42, bellHeight + 0.48, materials.engineMetal, 28);
+        engineCylinder(engine, vacuum ? 0.3 : 0.27, vacuum ? 0.3 : 0.27, 0.1, bellHeight + 0.72, materials.engineDark, 28);
+        engineRing(engine, vacuum ? 0.3 : 0.27, bellHeight + 0.78, 0.035, materials.gold);
+        engineRing(engine, vacuum ? 0.25 : 0.22, bellHeight + 0.3, 0.025, materials.engineMetal);
+
+        const pumpX = vacuum ? 0.39 : 0.31;
+        engineCylinder(engine, 0.11, 0.13, 0.28, bellHeight + 0.52, materials.engineDark, 18).position.x = pumpX;
+        engineCylinder(engine, 0.14, 0.1, 0.19, bellHeight + 0.43, materials.engineMetal, 18).position.z = 0.2;
+        for (let index = 0; index < 3; index += 1) {
+          const angle = index * Math.PI * 2 / 3;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          engineTube(engine, [
+            [cos * 0.22, bellHeight + 0.64, sin * 0.22],
+            [cos * 0.38, bellHeight + 0.48, sin * 0.38],
+            [cos * 0.42, bellHeight + 0.15, sin * 0.42],
+            [cos * exitRadius * 0.86, bellHeight * 0.62, sin * exitRadius * 0.86],
+            [cos * exitRadius * 0.9, 0.2, sin * exitRadius * 0.9]
+          ], vacuum ? 0.025 : 0.018, index === 0 ? materials.gold : materials.engineDark, 28);
+        }
+        for (let index = 0; index < 6; index += 1) {
+          const angle = index * Math.PI / 3;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          engineRod(engine, [cos * 0.2, bellHeight + 0.34, sin * 0.2], [cos * 0.36, bellHeight + 0.05, sin * 0.36], 0.018, materials.engineMetal);
+        }
+        return engine;
+      }
+
+      function createSlsEngineMaterials(color) {
+        return {
+          engine: new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.78 }),
+          engineDark: new THREE.MeshStandardMaterial({ color: 0x262b2e, roughness: 0.42, metalness: 0.62 }),
+          nozzle: new THREE.MeshStandardMaterial({ color: 0x4d4640, roughness: 0.58, metalness: 0.65 }),
+          gold: new THREE.MeshStandardMaterial({ color: 0xc9984d, roughness: 0.32, metalness: 0.72 }),
+          steel: new THREE.MeshStandardMaterial({ color, roughness: 0.38, metalness: 0.72 })
+        };
+      }
+
+      function buildSlsEngine(parent, engineType, materials) {
+        const isRs25 = engineType === 'rs25';
+        const engine = new THREE.Group();
+        parent.add(engine);
+        const exitRadius = isRs25 ? 1.25 : 0.88;
+        const throat = isRs25 ? 0.34 : 0.18;
+        const bellHeight = isRs25 ? 3.3 : 2.8;
+        const profile = [
+          [exitRadius, 0], [exitRadius * 0.96, 0.1], [exitRadius * 0.82, 0.42],
+          [exitRadius * 0.66, bellHeight * 0.36], [exitRadius * 0.5, bellHeight * 0.66],
+          [throat * 1.32, bellHeight * 0.92], [throat, bellHeight],
+          [isRs25 ? 0.54 : 0.31, bellHeight + 0.22], [isRs25 ? 0.64 : 0.36, bellHeight + 0.62],
+          [isRs25 ? 0.78 : 0.43, bellHeight + 0.92], [isRs25 ? 0.58 : 0.3, bellHeight + 1.18]
+        ];
+        engineLathe(engine, profile, materials.engine, 48);
+        engineLathe(engine, profile.slice(0, 7).map(([radius, height]) =>
+          [Math.max(radius - (isRs25 ? 0.045 : 0.035), 0.06), height + 0.02]
+        ).reverse(), materials.nozzle, 40);
+        engineRing(engine, exitRadius * 0.97, 0.07, isRs25 ? 0.065 : 0.055, materials.nozzle);
+        engineRing(engine, throat * 1.3, bellHeight * 0.9, 0.035, materials.gold);
+        for (let index = 2; index < 12; index += 1) {
+          const progress = index / 12;
+          const radius = exitRadius - (exitRadius - throat) * Math.pow(progress, 0.78);
+          engineRing(engine, radius, bellHeight * progress, isRs25 ? 0.02 : 0.018, index % 3 === 0 ? materials.nozzle : materials.engine);
+        }
+        engineCylinder(engine, isRs25 ? 0.62 : 0.39, isRs25 ? 0.68 : 0.43, isRs25 ? 0.28 : 0.22, bellHeight + 0.84, materials.engineDark, 24);
+        engineCylinder(engine, isRs25 ? 0.54 : 0.32, isRs25 ? 0.62 : 0.4, isRs25 ? 0.72 : 0.62, bellHeight + 1.24, materials.engine, 28);
+        engineRing(engine, isRs25 ? 0.62 : 0.4, bellHeight + 1.57, 0.045, materials.gold);
+        for (let index = 0; index < 4; index += 1) {
+          const angle = index * Math.PI / 2;
+          const cos = Math.cos(angle);
+          const sin = Math.sin(angle);
+          engineRod(
+            engine,
+            [cos * (isRs25 ? 0.38 : 0.32), bellHeight + 1.25, sin * (isRs25 ? 0.38 : 0.32)],
+            [cos * (isRs25 ? 0.7 : 0.62), bellHeight + 0.25, sin * (isRs25 ? 0.7 : 0.62)],
+            isRs25 ? 0.05 : 0.035,
+            materials.steel
+          );
+        }
+        return engine;
+      }
+
+      function loadModelAsset(url, onLoad) {
+        new GLTFLoader().load(url, onLoad, event => {
+          if (event.total) status.textContent = `Loading ${component.title} model · ${Math.min(100, Math.round(event.loaded / event.total * 100))}%`;
+        }, error => {
+          console.error(`Unable to load the ${component.title} model:`, error);
+          status.textContent = `Unable to load the ${component.title} model. Check the asset path and try again.`;
+        });
+      }
+
+      function showSaturnF1(root) {
+        const engine = root.getObjectByName('F-1_Engine_-_First_Stage_63');
+        if (!engine) {
+          console.error('The supplied Saturn V GLB is missing the F-1 engine node.');
+          status.textContent = 'Could not find the F-1 engine in the supplied Saturn V model.';
+          return;
+        }
+        modelRoot = root;
+        scene.add(modelRoot);
+        modelRoot.traverse(node => {
+          node.visible = false;
+          if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; }
+        });
+        recolorModel(engine, component.color);
+        revealNode(engine);
+        finishModel(modelRoot);
+      }
+
+      function showStandaloneEngine(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        modelRoot.traverse(node => { if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; } });
+        recolorModel(modelRoot, component.color);
+        finishModel(modelRoot);
+      }
+
+      function showProceduralEngine() {
+        const root = new THREE.Group();
+        if (component.model === 'merlin') {
+          const materials = createMerlinMaterials(component.color);
+          buildMerlin(root, 0, 0, 0.04, 1, Boolean(component.vacuum), materials);
+        } else {
+          const engineType = component.model === 'sls-rs25' ? 'rs25' : 'rl10';
+          buildSlsEngine(root, engineType, createSlsEngineMaterials(component.color));
+        }
+        scene.add(root);
+        finishModel(root);
+      }
+
+      function startEngineModel() {
+        if (component.model === 'merlin' || component.model === 'sls-rs25' || component.model === 'sls-rl10') {
+          showProceduralEngine();
+        } else if (component.model === 'saturn-f1') {
+          loadModelAsset(saturnModelUrl, gltf => showSaturnF1(gltf.scene));
+        } else if (component.model === 'j2') {
+          loadModelAsset('./assets/engine_j2.glb', gltf => showStandaloneEngine(gltf.scene));
+        }
+      }
+
+      function startCrewModel() {
+        if (component.crewModel === 'apollo') {
+          loadModelAsset(saturnModelUrl, gltf => showApolloSpacecraft(gltf.scene));
+        } else if (component.crewModel === 'orion') {
+          loadModelAsset('./assets/orion_spacecraft.glb', gltf => showOrionSpacecraft(gltf.scene));
+        } else if (component.crewModel === 'orbiter') {
+          loadModelAsset('./assets/space-shuttle-challenger/source/Challenger.glb', gltf => showShuttleOrbiter(gltf.scene));
+        }
+      }
+
+      function startAbortSystem() {
+        loadModelAsset(saturnModelUrl, gltf => showLaunchAbortSystem(gltf.scene));
+      }
+
+      function startSatelliteModel() {
+        loadModelAsset('./assets/space_satellite.glb', gltf => showSatelliteModel(gltf.scene));
+      }
+
+      function showExternalTank(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        modelRoot.traverse(node => { if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; } });
+        const materialRoot = modelRoot.getObjectByName(component.materialRoot);
+        const selectedMeshes = materialRoot
+          ? getMeshesWithMaterials(materialRoot, component.materials, component.materialPrefixes)
+          : [];
+        if (!materialRoot || !selectedMeshes.length) {
+          console.error('The supplied Challenger GLB is missing required external-tank geometry.');
+          status.textContent = 'The supplied GLB is missing the external-tank geometry.';
+          return;
+        }
+        modelRoot.traverse(node => { node.visible = false; });
+        selectedMeshes.forEach(revealNode);
+        finishModel(modelRoot);
+      }
+
+      function showSingleBooster(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        modelRoot.traverse(node => { if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; } });
+        const materialRoot = modelRoot.getObjectByName(component.materialRoot);
+        const selectedMeshes = materialRoot
+          ? getMeshesWithMaterials(materialRoot, component.materials, component.materialPrefixes)
+          : [];
+        if (!materialRoot || !selectedMeshes.length) {
+          console.error('The supplied Challenger GLB is missing required solid-booster geometry.');
+          status.textContent = 'The supplied GLB is missing the solid-booster geometry.';
+          return;
+        }
+        modelRoot.traverse(node => { node.visible = false; });
+        const single = createSingleBoosterMesh(selectedMeshes[0]);
+        if (!single || !selectedMeshes[0].parent) {
+          console.error('Unable to isolate a single solid booster from the supplied Challenger GLB.');
+          status.textContent = 'Unable to isolate one solid booster from the supplied GLB.';
+          return;
+        }
+        if (component.boosterColor !== undefined) {
+          const sourceMaterials = Array.isArray(single.material) ? single.material : [single.material];
+          const coloredMaterials = sourceMaterials.map(material => {
+            const colored = material.clone();
+            if (colored.color) colored.color.setHex(component.boosterColor);
+            return colored;
+          });
+          single.material = Array.isArray(single.material) ? coloredMaterials : coloredMaterials[0];
+        }
+        selectedMeshes[0].parent.add(single);
+        revealNode(single);
+        finishModel(modelRoot);
+      }
+
+      function showApolloSpacecraft(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        const missing = component.nodes.filter(name => !modelRoot.getObjectByName(name));
+        if (missing.length) {
+          console.error('The supplied Saturn V GLB is missing required Apollo geometry:', missing);
+          status.textContent = 'The supplied Saturn V model is missing Apollo spacecraft geometry.';
+          return;
+        }
+        modelRoot.traverse(node => {
+          node.visible = false;
+          if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; }
+        });
+        component.nodes.forEach(name => revealNode(modelRoot.getObjectByName(name)));
+        finishModel(modelRoot);
+      }
+
+      function showLaunchAbortSystem(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        const abortSystem = modelRoot.getObjectByName(component.node);
+        if (!abortSystem) {
+          console.error('The supplied Saturn V GLB is missing the Launch Abort System node.');
+          status.textContent = 'The supplied Saturn V model is missing the Launch Abort System.';
+          return;
+        }
+        modelRoot.traverse(node => {
+          node.visible = false;
+          if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; }
+        });
+        revealNode(abortSystem);
+        finishModel(modelRoot);
+      }
+
+      function showSatelliteModel(satellite) {
+        satellite.updateMatrixWorld(true);
+        const bounds = new THREE.Box3().setFromObject(satellite);
+        const size = bounds.getSize(new THREE.Vector3());
+        const largestDimension = Math.max(size.x, size.y, size.z);
+        if (bounds.isEmpty() || !Number.isFinite(largestDimension) || largestDimension <= 0) {
+          const error = new Error('The satellite GLB has no usable model bounds.');
+          console.error('Unable to prepare the supplied satellite model:', error);
+          status.textContent = 'The supplied satellite model contains no usable geometry.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const scale = 7 / largestDimension;
+        satellite.scale.setScalar(scale);
+        satellite.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+        satellite.traverse(node => {
+          if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; }
+        });
+        modelRoot = satellite;
+        scene.add(modelRoot);
+        finishModel(modelRoot);
+      }
+
+      function showOrionSpacecraft(spacecraft) {
+        spacecraft.updateMatrixWorld(true);
+        const bounds = new THREE.Box3().setFromObject(spacecraft);
+        const size = bounds.getSize(new THREE.Vector3());
+        if (bounds.isEmpty() || size.y <= 0) {
+          const error = new Error('The Orion GLB has no usable vertical bounds.');
+          console.error('Unable to prepare the supplied Orion model:', error);
+          status.textContent = 'The supplied Orion model contains no usable geometry.';
+          return;
+        }
+        const center = bounds.getCenter(new THREE.Vector3());
+        const scale = 7 / size.y;
+        spacecraft.scale.setScalar(scale);
+        spacecraft.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+        spacecraft.traverse(node => {
+          if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; }
+        });
+        modelRoot = spacecraft;
+        scene.add(modelRoot);
+        finishModel(modelRoot);
+      }
+
+      function showShuttleOrbiter(root) {
+        modelRoot = root;
+        scene.add(modelRoot);
+        scene.updateMatrixWorld(true);
+        modelRoot.traverse(node => { if (node.isMesh) { node.castShadow = true; node.receiveShadow = true; } });
+        const materialRoot = modelRoot.getObjectByName(component.materialRoot);
+        const selectedMeshes = materialRoot
+          ? getMeshesWithMaterials(
+            materialRoot,
+            component.materials,
+            component.materialPrefixes,
+            component.excludeMaterials,
+            component.excludeMaterialPrefixes,
+            component.includeAllMaterials
+          )
+          : [];
+        if (!materialRoot || !selectedMeshes.length) {
+          console.error('The supplied Challenger GLB is missing required Orbiter geometry.');
+          status.textContent = 'The supplied GLB is missing the Orbiter geometry.';
+          return;
+        }
+        modelRoot.traverse(node => { node.visible = false; });
+        selectedMeshes.forEach(revealNode);
+        finishModel(modelRoot);
+      }
+
+      function finishModel(root) {
+        modelRoot = root;
+        scene.updateMatrixWorld(true);
+        componentBounds = getVisibleBounds(root);
+        if (componentBounds.isEmpty()) {
+          status.textContent = 'No visible model geometry is available for this view.';
+          return;
+        }
+        const center = componentBounds.getCenter(new THREE.Vector3());
+        const size = componentBounds.getSize(new THREE.Vector3());
+        const modelScale = Math.max(size.x, size.y, size.z);
+        const floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(modelScale * 3, modelScale * 3),
+          new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.32 })
+        );
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = componentBounds.min.y - modelScale * 0.01;
+        floor.receiveShadow = true;
+        scene.add(floor);
+        keyLight.position.set(center.x + modelScale, center.y + modelScale * 1.6, center.z + modelScale);
+        keyLight.target.position.copy(center);
+        scene.add(keyLight.target);
+        keyLight.shadow.camera.left = -modelScale * 2;
+        keyLight.shadow.camera.right = modelScale * 2;
+        keyLight.shadow.camera.top = modelScale * 2;
+        keyLight.shadow.camera.bottom = -modelScale * 2;
+        keyLight.shadow.camera.far = modelScale * 5;
+        keyLight.shadow.camera.updateProjectionMatrix();
+        fillLight.position.set(center.x - modelScale, center.y + modelScale * 0.7, center.z - modelScale);
+        fillLight.target.position.copy(center);
+        scene.add(fillLight.target);
+        focusOnBounds(componentBounds);
+        status.textContent = component.engine
+          ? `${component.title} model · drag to rotate`
+          : component.procedural === 'tank'
+            ? `${component.engines}-engine modular tank · drag to rotate`
+            : component.selectionMessage || 'External tank isolated · drag to rotate';
+      }
+
+      if (component.satelliteModel) {
+        startSatelliteModel();
+      } else if (component.abortSystem) {
+        startAbortSystem();
+      } else if (component.crewModel) {
+        startCrewModel();
+      } else if (component.engine) {
+        startEngineModel();
+      } else if (component.procedural === 'tank') {
+        addTankMesh();
+      } else if (component.procedural === 'fairing') {
+        addFairingModel();
+      } else if (component.procedural === 'landing-legs') {
+        addLandingLegsModel();
+      } else {
+        new GLTFLoader().load(
+          './assets/space-shuttle-challenger/source/Challenger.glb',
+          gltf => {
+            if (component.singleBooster) showSingleBooster(gltf.scene);
+            else showExternalTank(gltf.scene);
+          },
+          event => {
+            if (event.total) status.textContent = `Loading Challenger model · ${Math.min(100, Math.round(event.loaded / event.total * 100))}%`;
+          },
+          error => {
+            console.error('Unable to load the supplied Challenger GLB:', error);
+            status.textContent = 'Unable to load the supplied Challenger model. Check the asset path and try again.';
+          }
+        );
+      }
+
+      document.querySelector('#reset-button').addEventListener('click', () => {
+        if (componentBounds) focusOnBounds(componentBounds);
+      });
+      if (hasFairingControls) {
+        fairingAssemblyButton.addEventListener('click', () => setFairingPose(false));
+        fairingHalvesButton.addEventListener('click', () => setFairingPose(true));
+      }
+      new ResizeObserver(resize).observe(canvas);
+      resize();
+      function render() {
+        requestAnimationFrame(render);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+  </script>
+</body>
+</html>
